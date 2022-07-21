@@ -1,17 +1,19 @@
 const path = require("path");
 const express = require("express");
 const port = process.env.PORT || 3001;
+const cors = require("cors");
 
 require("dotenv").config();
 
 // Initialize the app
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // API Routes
-app.use(require("./api/"));
+app.use(require("./routes"));
 
 // Serve static files
 app.use(express.static(path.resolve(__dirname, "public")));
