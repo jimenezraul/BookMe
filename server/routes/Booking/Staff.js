@@ -5,7 +5,7 @@ BigInt.prototype.toJSON = function () {
 
 const router = require("express").Router();
 
-// All Barbers
+// All Staff
 router.get("/", async (req, res) => {
   try {
     const response = await client.bookingsApi.listTeamMemberBookingProfiles(
@@ -18,7 +18,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Barber by id
+// Staff by id
 router.get("/:id", async (req, res) => {
   try {
     const response = await client.bookingsApi.listTeamMemberBookingProfiles(
@@ -34,5 +34,7 @@ router.get("/:id", async (req, res) => {
     console.log(error);
   }
 });
+
+
 
 module.exports = router;
