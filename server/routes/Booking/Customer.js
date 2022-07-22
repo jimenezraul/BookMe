@@ -1,4 +1,5 @@
 const client = require("../Client");
+const date = require('date-and-time');
 
 const router = require("express").Router();
 
@@ -29,7 +30,9 @@ router.get("/", async (req, res) => {
 });
 
 router.get("/booking/:id", async (req, res) => {
+  const id = req.params.id;
   const now = new Date();
+
   try {
     const response = await client.bookingsApi.listBookings(
       20,
@@ -41,7 +44,7 @@ router.get("/booking/:id", async (req, res) => {
 
     // Customer's booking
     const booking = response.result.bookings.filter(
-      (booking) => booking.customerId === req.params.id
+      (booking) => booking.customerId === id && booking.status === "ACCEPTED"
     );
 
     // All services
@@ -53,10 +56,12 @@ router.get("/booking/:id", async (req, res) => {
 
     // Customer's booking services
     const data = booking.map((b) => {
+      const start = new Date(b.startAt);
       // List of ids in customer's booking
       const serviceVariationIds = b.appointmentSegments.map(
         (segment) => segment.serviceVariationId
       );
+      // Filter services by ids
       const filteredData = services
         .map((item) => {
           return item.itemData.variations.filter((variation) => {
@@ -66,7 +71,9 @@ router.get("/booking/:id", async (req, res) => {
         .flat();
       return {
         ...b,
-        services: filteredData,
+        appointments: filteredData,
+        appointmentDate: date.format(start, 'ddd, MMM DD YYYY'),
+        appointmentTime: date.format(start, 'hh:mm A'),
       };
     });
 
