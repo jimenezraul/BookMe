@@ -1,8 +1,10 @@
 const client = require("../Client");
-const date = require('date-and-time');
+const date = require("date-and-time");
+const { Auth } = require("../../utils/Auth");
 
 const router = require("express").Router();
 
+// Get customer by email
 router.get("/", async (req, res) => {
   const email = req.body.email;
 
@@ -29,8 +31,11 @@ router.get("/", async (req, res) => {
   }
 });
 
-router.get("/booking/:id", async (req, res) => {
-  const id = req.params.id;
+// Get booking by customer id
+router.get("/booking/:customerId",async (req, res) => {
+  const id = req.params.customerId;
+  const location = req.body.location;
+  
   const now = new Date();
 
   try {
@@ -38,7 +43,7 @@ router.get("/booking/:id", async (req, res) => {
       20,
       "",
       "",
-      process.env.SHOP_LOCATION,
+      location,
       now.toISOString()
     );
 
@@ -72,8 +77,8 @@ router.get("/booking/:id", async (req, res) => {
       return {
         ...b,
         appointments: filteredData,
-        appointmentDate: date.format(start, 'ddd, MMM DD YYYY'),
-        appointmentTime: date.format(start, 'hh:mm A'),
+        appointmentDate: date.format(start, "ddd, MMM DD YYYY"),
+        appointmentTime: date.format(start, "hh:mm A"),
       };
     });
 

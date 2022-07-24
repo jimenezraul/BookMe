@@ -23,6 +23,7 @@ router.get("/", async (req, res) => {
 // Service by member id
 router.get("/:memberId", async (req, res) => {
   const memberId = req.params.memberId;
+
   try {
     const response = await client.catalogApi.searchCatalogItems({
       productTypes: ["APPOINTMENTS_SERVICE"],
