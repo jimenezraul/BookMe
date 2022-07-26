@@ -57,11 +57,10 @@ const AppNavbar = () => {
       className={`flex w-full component-preview items-center justify-center gap-2 font-sans ${
         isDark && "bg-slate-800"
       } shadow-lg`}
-      ref={menuRef}
     >
       <Navbar className='container'>
         <Navbar.Start>
-          <div>
+          <div ref={menuRef} className="z-50">
             <Button
               color='ghost'
               shape='circle'
