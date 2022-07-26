@@ -16,9 +16,11 @@ function App() {
       <Router>
         <div className='min-h-screen flex flex-col justify-between'>
           <Navbar />
-          <Routes>
-            <Route path='/' element={<Home />} />
-          </Routes>
+          <div className='flex-1'>
+            <Routes>
+              <Route path='/' element={<Home />} />
+            </Routes>
+          </div>
           <Footer />
         </div>
       </Router>
