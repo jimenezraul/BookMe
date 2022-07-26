@@ -1,6 +1,7 @@
+import { useOutside } from "./useOutside";
 import { Button, Navbar, Form, Toggle, Dropdown } from "react-daisyui";
 import { Link } from "react-router-dom";
-const { useState, useRef, useEffect } = require("react");
+const { useState, useRef } = require("react");
 const { useSelector, useDispatch } = require("react-redux");
 const { theme, setTheme } = require("../../features/theme/themeSlice");
 
@@ -33,6 +34,9 @@ const AppNavbar = () => {
   const [active, setActive] = useState(0);
   const [isDark, setIsDark] = useState(appTheme === "night");
 
+  useOutside(menuRef, setIsOpen);
+  useOutside(profileRef, setIsProfileOpen);
+
   const handleThemeChange = () => {
     setIsDark(!isDark);
     dispatch(setTheme(isDark ? "winter" : "night"));
@@ -43,61 +47,50 @@ const AppNavbar = () => {
     setIsOpen(false);
   };
 
-  const menuOnToggle = () => {
-    setIsOpen(!isOpen);
-  };
-
-  // if click outside of menuRef, close menu
-  const handleClickOutside = (e) => {
-    if (menuRef.current && !menuRef.current.contains(e.target)) {
-      setIsOpen(false);
-    }
-  };
-
-  // add event listener
-  useEffect(() => {
-    document.addEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const profileToggle = () => {
-    setIsProfileOpen(!isProfileOpen);
-  };
-
   const handleProfileClick = (index) => {
     setActive(index);
     setIsProfileOpen(!isProfileOpen);
   };
 
-  // if click outside of profileRef, close profile
-  const handleProfileClickOutside = (e) => {
-    console.log("hello");
-    if (profileRef.current && !profileRef.current.contains(e.target)) {
-      setIsProfileOpen(false);
-    }
-  };
-  // add event listener
-  useEffect(() => {
-    document.addEventListener("mousedown", handleProfileClickOutside);
-  }, []);
-  console.log(isOpen);
   return (
     <div
       className={`flex w-full component-preview items-center justify-center gap-2 font-sans ${
         isDark && "bg-slate-800"
       } shadow-lg`}
+      ref={menuRef}
     >
       <Navbar className='container'>
         <Navbar.Start>
-          <div ref={menuRef}>
-            <Button color='ghost' shape='circle' onClick={menuOnToggle}>
+          <div>
+            <Button
+              color='ghost'
+              shape='circle'
+              onClick={() => setIsOpen(!isOpen)}
+            >
               {!isOpen ? (
-                <svg className="swap-off fill-current transition-all duration-200 rotate-180" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512"><path d="M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z"/></svg>
+                <svg
+                  className='swap-off fill-current transition-all duration-200 rotate-180'
+                  xmlns='http://www.w3.org/2000/svg'
+                  width='32'
+                  height='32'
+                  viewBox='0 0 512 512'
+                >
+                  <path d='M64,384H448V341.33H64Zm0-106.67H448V234.67H64ZM64,128v42.67H448V128Z' />
+                </svg>
               ) : (
-                <svg className="swap-on fill-current transition-all duration-200" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 512 512"><polygon points="400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49"/></svg>
+                <svg
+                  className='swap-on fill-current transition-all duration-200'
+                  xmlns='http://www.w3.org/2000/svg'
+                  width='32'
+                  height='32'
+                  viewBox='0 0 512 512'
+                >
+                  <polygon points='400 145.49 366.51 112 256 222.51 145.49 112 112 145.49 222.51 256 112 366.51 145.49 400 256 289.49 366.51 400 400 366.51 289.49 256 400 145.49' />
+                </svg>
               )}
             </Button>
             <div
-              onToggle={menuOnToggle}
+              onToggle={() => setIsOpen(!isOpen)}
               className={`${
                 isOpen ? "opacity-100" : "opacity-0"
               } absolute top-16 transition-all duration-200`}
@@ -137,7 +130,7 @@ const AppNavbar = () => {
               color='ghost'
               className='avatar'
               shape='circle'
-              onClick={profileToggle}
+              onClick={() => setIsProfileOpen(!isProfileOpen)}
             >
               <div className='w-10 rounded-full'>
                 <img
@@ -147,7 +140,7 @@ const AppNavbar = () => {
               </div>
             </Button>
             <div
-              className={`absolute right-0 top-14 ${
+              className={`absolute right-0 top-14 z-50 ${
                 isProfileOpen ? "opacity-100" : "opacity-0"
               } transition-all duration-200`}
             >
@@ -159,7 +152,9 @@ const AppNavbar = () => {
                 <li>
                   <Link
                     to='/profile'
-                    className={`justify-between text-lg md:text-sm ${active === 4 && "active font-bold text-white"}`}
+                    className={`justify-between text-lg md:text-sm ${
+                      active === 4 && "active font-bold text-white"
+                    }`}
                     onClick={() => handleProfileClick(4)}
                   >
                     Profile
