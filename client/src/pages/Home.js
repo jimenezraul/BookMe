@@ -1,6 +1,45 @@
 import { Hero, Button } from "react-daisyui";
+import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { theme } from "../features/theme/themeSlice";
+import { useSelector } from "react-redux";
+
+const Services = [
+  {
+    title: "Haircut & Styling",
+    description:
+      "Modern styling combined with precision cutting for Women, Men, and Children.",
+    icon: "/assets/img/barber-shop.png",
+  },
+  {
+    title: "Coloting & Highlights",
+    description:
+      "Get the perfect Balayage, Ombre, highlights, or hair color, that you've always wanted.",
+    icon: "/assets/img/hair-dye-kit.png",
+  },
+  {
+    title: "Hair Extensions",
+    description:
+      "100% human hair available in Hand Tied, Fusion, Tape-in or Clip-in hair extensions.",
+    icon: "/assets/img/hair.png",
+  },
+];
 
 const Home = () => {
+  const [locations, setLocations] = useState([]);
+  const appTheme = useSelector(theme);
+  const [isDark, setIsDark] = useState(appTheme === "night");
+
+  useEffect(() => {
+    fetch("/api/locations")
+      .then((res) => res.json())
+      .then((data) => setLocations(data.locations));
+  }, []);
+
+  useEffect(() => {
+    setIsDark(appTheme === "night");
+  }, [appTheme]);
+
   return (
     <div className='flex-1 flex flex-col justify-center items-center'>
       <div className='container'>
@@ -8,19 +47,14 @@ const Home = () => {
           style={{
             backgroundImage: "url(assets/img/salon.jpg)",
           }}
-          className='h-96 rounded-b-2xl overflow-hidden shadow-lg'
+          className='h-96 z-10 rounded-b-2xl overflow-hidden shadow-lg'
         >
           <Hero.Overlay />
           <Hero.Content className='text-center text-white'>
             <div className='max-w-md'>
-              <h1 className='text-5xl font-bold'>Welcome</h1>
-              <p className='py-6'>
-                Provident cupiditate voluptatem et in. Quaerat fugiat ut
-                assumenda excepturi exercitationem quasi. In deleniti eaque aut
-                repudiandae et a id nisi.
-              </p>
-
-              <Button color='primary' className='text-white font-bold text-lg'>
+              <h1 className='text-5xl font-bold'>NextLevel Studio</h1>
+              <p className='py-6'>A Unisex Salon in the heart of the city.</p>
+              <Button className='text-white font-bold text-lg bg-blue-700 hover:bg-blue-800 border-0'>
                 BookNow
               </Button>
             </div>
@@ -28,135 +62,99 @@ const Home = () => {
         </Hero>
       </div>
 
-      <section class='text-gray-600 body-font'>
-        <div class='container px-5 py-16 mx-auto'>
-          <h1 class='sm:text-3xl border-b-2 border-base-300 pb-5 font-medium title-font text-center text-base mb-20'>
-            Our Services
+      <section className='text-gray-600 body-font'>
+        <div className='container px-5 py-16 mx-auto'>
+          <div className='text-center mb-20'>
+            <h1 className='sm:text-3xl text-2xl font-medium title-font text-base-400 mb-4'>
+              Our Services
+            </h1>
+            <div className='flex mt-6 justify-center'>
+              <div className='w-16 h-1 rounded-full bg-blue-500 inline-flex'></div>
+            </div>
+          </div>
+          <div className='flex flex-wrap sm:-m-4 -mx-4 -mb-10 -mt-4 md:space-y-0 space-y-6'>
+            {Services.map((service, index) => (
+              <div
+                key={index}
+                className='p-4 md:w-1/3 flex flex-col text-center items-center'
+              >
+                <div className='w-20 h-20 inline-flex items-center justify-center rounded-full bg-blue-100 text-blue-500 mb-5 flex-shrink-0'>
+                  <img
+                    className='w-12 filter sepia'
+                    src={service.icon}
+                    alt=''
+                  />
+                </div>
+                <div className='flex-grow'>
+                  <h2 className='text-base-400  text-lg title-font font-medium mb-3'>
+                    {service.title}
+                  </h2>
+                  <p className='leading-relaxed text-base'>
+                    {service.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className='text-gray-600 body-font w-full'>
+        <div className='container py-24 mx-auto'>
+          <h1 className='text-center sm:text-3xl text-2xl font-medium title-font text-base-400 mb-4'>
+            Our Locations
           </h1>
-          <div class='flex flex-wrap sm:-m-4 -mx-4 -mb-10 -mt-4 md:space-y-0 space-y-6'>
-            <div class='p-4 md:w-1/3 flex'>
-              <div class='w-12 h-12 inline-flex items-center justify-center rounded-full bg-blue-100 text-blue-500 mb-4 flex-shrink-0'>
-                <svg
-                  fill='none'
-                  stroke='currentColor'
-                  stroke-linecap='round'
-                  stroke-linejoin='round'
-                  stroke-width='2'
-                  class='w-6 h-6'
-                  viewBox='0 0 24 24'
+          <div className='flex mt-6 justify-center mb-16'>
+            <div className='w-16 h-1 rounded-full bg-blue-500 inline-flex'></div>
+          </div>
+          <div className='flex flex-wrap'>
+            {locations.map((location, index) => {
+              const isLast = index === locations.length - 1;
+
+              return (
+                <div
+                  key={index}
+                  className='p-2 flex w-10/12 md:w-4/12 justify-center mx-auto'
                 >
-                  <path d='M22 12h-4l-3 9L9 3l-3 9H2'></path>
-                </svg>
-              </div>
-              <div class='flex-grow pl-6'>
-                <h2 class='text-gray-900 text-lg title-font font-medium mb-2'>
-                  Shooting Stars
-                </h2>
-                <p class='leading-relaxed text-base'>
-                  Blue bottle crucifix vinyl post-ironic four dollar toast vegan
-                  taxidermy. Gastropub indxgo juice poutine, ramps microdosing
-                  banh mi pug VHS try-hard ugh iceland kickstarter tumblr
-                  live-edge tilde.
-                </p>
-                <a class='mt-3 text-blue-500 inline-flex items-center'>
-                  Learn More
-                  <svg
-                    fill='none'
-                    stroke='currentColor'
-                    stroke-linecap='round'
-                    stroke-linejoin='round'
-                    stroke-width='2'
-                    class='w-4 h-4 ml-2'
-                    viewBox='0 0 24 24'
+                  <div
+                    className={`flex-1 pt-6 px-4 flex justify-center text-center rounded-xl shadow-lg  border ${
+                      isDark ? "bg-slate-800 border-slate-700" : "bg-gray-100"
+                    } ${
+                      !isLast && "border-b"
+                    } pb-10 md:pb-6 mb-10 border-gray-200`}
                   >
-                    <path d='M5 12h14M12 5l7 7-7 7'></path>
-                  </svg>
-                </a>
-              </div>
-            </div>
-            <div class='p-4 md:w-1/3 flex'>
-              <div class='w-12 h-12 inline-flex items-center justify-center rounded-full bg-blue-100 text-blue-500 mb-4 flex-shrink-0'>
-                <svg
-                  fill='none'
-                  stroke='currentColor'
-                  stroke-linecap='round'
-                  stroke-linejoin='round'
-                  stroke-width='2'
-                  class='w-6 h-6'
-                  viewBox='0 0 24 24'
-                >
-                  <circle cx='6' cy='6' r='3'></circle>
-                  <circle cx='6' cy='18' r='3'></circle>
-                  <path d='M20 4L8.12 15.88M14.47 14.48L20 20M8.12 8.12L12 12'></path>
-                </svg>
-              </div>
-              <div class='flex-grow pl-6'>
-                <h2 class='text-gray-900 text-lg title-font font-medium mb-2'>
-                  The Catalyzer
-                </h2>
-                <p class='leading-relaxed text-base'>
-                  Blue bottle crucifix vinyl post-ironic four dollar toast vegan
-                  taxidermy. Gastropub indxgo juice poutine, ramps microdosing
-                  banh mi pug VHS try-hard ugh iceland kickstarter tumblr
-                  live-edge tilde.
-                </p>
-                <a class='mt-3 text-blue-500 inline-flex items-center'>
-                  Learn More
-                  <svg
-                    fill='none'
-                    stroke='currentColor'
-                    stroke-linecap='round'
-                    stroke-linejoin='round'
-                    stroke-width='2'
-                    class='w-4 h-4 ml-2'
-                    viewBox='0 0 24 24'
-                  >
-                    <path d='M5 12h14M12 5l7 7-7 7'></path>
-                  </svg>
-                </a>
-              </div>
-            </div>
-            <div class='p-4 md:w-1/3 flex'>
-              <div class='w-12 h-12 inline-flex items-center justify-center rounded-full bg-blue-100 text-blue-500 mb-4 flex-shrink-0'>
-                <svg
-                  fill='none'
-                  stroke='currentColor'
-                  stroke-linecap='round'
-                  stroke-linejoin='round'
-                  stroke-width='2'
-                  class='w-6 h-6'
-                  viewBox='0 0 24 24'
-                >
-                  <path d='M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2'></path>
-                  <circle cx='12' cy='7' r='4'></circle>
-                </svg>
-              </div>
-              <div class='flex-grow pl-6'>
-                <h2 class='text-gray-900 text-lg title-font font-medium mb-2'>
-                  Neptune
-                </h2>
-                <p class='leading-relaxed text-base'>
-                  Blue bottle crucifix vinyl post-ironic four dollar toast vegan
-                  taxidermy. Gastropub indxgo juice poutine, ramps microdosing
-                  banh mi pug VHS try-hard ugh iceland kickstarter tumblr
-                  live-edge tilde.
-                </p>
-                <a class='mt-3 text-blue-500 inline-flex items-center'>
-                  Learn More
-                  <svg
-                    fill='none'
-                    stroke='currentColor'
-                    stroke-linecap='round'
-                    stroke-linejoin='round'
-                    stroke-width='2'
-                    class='w-4 h-4 ml-2'
-                    viewBox='0 0 24 24'
-                  >
-                    <path d='M5 12h14M12 5l7 7-7 7'></path>
-                  </svg>
-                </a>
-              </div>
-            </div>
+                    <div className='flex-grow text-center mt-6 sm:mt-0'>
+                      <h1 className='text-slate-500 text-2xl title-font font-medium mb-2'>
+                        {location.businessName}
+                      </h1>
+                      <p className='leading-relaxed text-slate-500'>
+                        {location.address.addressLine1},{" "}
+                        {location.address.locality}{" "}
+                        {location.address.administrativeDistrictLevel1}{" "}
+                        {location.address.postalCode}
+                      </p>
+                      {/* phone number */}
+                      <a href={`tel:${location.phoneNumber}`}>
+                        <p className='leading-relaxed text-slate-500 mb-3 font-semibold'>
+                          {location.phoneNumber}
+                        </p>
+                      </a>
+                      <div className='leading-relaxed text-slate-500'>
+                        <h2 className='font-bold text-lg'>Business Hours</h2>
+                        {location.businessHours.periods.map((period, index) => (
+                          <div key={index}>
+                            <p>
+                              {period.dayOfWeek} - {period.open} -{" "}
+                              {period.close}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>

@@ -107,7 +107,7 @@ const AppNavbar = () => {
                       onClick={() => handleMenuClick(index)}
                       className={`p-2 text-lg md:text-sm ${
                         active === index &&
-                        "active rounded-md font-bold text-white"
+                        "bg-blue-600 visited:bg-blue-700 rounded-md font-bold text-white"
                       }`}
                     >
                       {menu.name}
@@ -152,7 +152,7 @@ const AppNavbar = () => {
                   <Link
                     to='/profile'
                     className={`justify-between text-lg md:text-sm ${
-                      active === 4 && "active font-bold text-white"
+                      active === 4 && "bg-blue-600 font-bold text-white"
                     }`}
                     onClick={() => handleProfileClick(4)}
                   >
