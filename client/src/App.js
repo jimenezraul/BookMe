@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Footer from "./components/Footer";
+import BookNow from "./pages/BookNow";
 
 function App() {
   const appTheme = useSelector(theme);
@@ -19,6 +20,7 @@ function App() {
           <div className='flex-1'>
             <Routes>
               <Route path='/' element={<Home />} />
+              <Route path='/booknow' element={<BookNow />} />
             </Routes>
           </div>
           <Footer />

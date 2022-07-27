@@ -1,8 +1,5 @@
-import { Hero, Button } from "react-daisyui";
-import { useEffect, useState } from "react";
-import { useFetch } from "./hook/useFetch";
-import { theme } from "../features/theme/themeSlice";
-import { useSelector } from "react-redux";
+import HeroSection from "../components/Hero";
+import Locations from "../components/Locations";
 
 const Services = [
   {
@@ -26,35 +23,15 @@ const Services = [
 ];
 
 const Home = () => {
-  const appTheme = useSelector(theme);
-  const [isDark, setIsDark] = useState(appTheme === "night");
-
-  const { data, loading, error } = useFetch("/api/locations");
-
-  useEffect(() => {
-    setIsDark(appTheme === "night");
-  }, [appTheme]);
-
   return (
     <div className='flex-1 flex flex-col justify-center items-center'>
       <div className='container'>
-        <Hero
-          style={{
-            backgroundImage: "url(assets/img/salon.jpg)",
-          }}
-          className='h-96 z-10 rounded-b-2xl overflow-hidden shadow-lg'
-        >
-          <Hero.Overlay />
-          <Hero.Content className='text-center text-white'>
-            <div className='max-w-md'>
-              <h1 className='text-5xl font-bold'>NextLevel Studio</h1>
-              <p className='py-6'>A Unisex Salon in the heart of the city.</p>
-              <Button className='text-white font-bold text-lg bg-blue-700 hover:bg-blue-800 border-0'>
-                BookNow
-              </Button>
-            </div>
-          </Hero.Content>
-        </Hero>
+        <HeroSection
+          title='NextLevel Studio'
+          subtitle='A Unisex Salon in the heart of the city.'
+          buttonName='BookNow'
+          link='/booknow'
+        />
       </div>
 
       <section className='text-gray-600 body-font'>
@@ -102,56 +79,7 @@ const Home = () => {
           <div className='flex mt-6 justify-center mb-16'>
             <div className='w-16 h-1 rounded-full bg-blue-500 inline-flex'></div>
           </div>
-          <div className='flex flex-wrap justify-center'>
-            {loading && <progress className='progress w-56'></progress>}
-            {data?.map((location, index) => {
-              const isLast = index === data.length - 1;
-
-              return (
-                <div
-                  key={index}
-                  className='p-2 flex w-10/12 md:w-4/12 justify-center mx-auto'
-                >
-                  <div
-                    className={`flex-1 pt-6 px-4 flex justify-center text-center rounded-xl shadow-lg  border ${
-                      isDark ? "bg-slate-800 border-slate-800" : "bg-gray-100 border-slate-300"
-                    } ${
-                      !isLast && "border-b"
-                    } pb-10 md:pb-6 mb-10 border-gray-200`}
-                  >
-                    <div className='flex-grow text-center mt-6 sm:mt-0'>
-                      <h1 className='text-slate-500 text-2xl title-font font-medium mb-2'>
-                        {location.businessName}
-                      </h1>
-                      <p className='leading-relaxed text-slate-500'>
-                        {location.address.addressLine1},{" "}
-                        {location.address.locality}{" "}
-                        {location.address.administrativeDistrictLevel1}{" "}
-                        {location.address.postalCode}
-                      </p>
-                      {/* phone number */}
-                      <a href={`tel:${location.phoneNumber}`}>
-                        <p className='leading-relaxed text-slate-500 mb-3 font-semibold'>
-                          {location.phoneNumber}
-                        </p>
-                      </a>
-                      <div className='leading-relaxed text-slate-500'>
-                        <h2 className='font-bold text-lg'>Business Hours</h2>
-                        {location.businessHours.periods.map((period, index) => (
-                          <div key={index}>
-                            <p>
-                              {period.dayOfWeek} - {period.open} -{" "}
-                              {period.close}
-                            </p>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
+          <Locations />
         </div>
       </section>
     </div>

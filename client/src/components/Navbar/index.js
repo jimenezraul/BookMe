@@ -1,6 +1,7 @@
 import { useOutside } from "./useOutside";
 import { Button, Navbar, Form, Toggle, Dropdown } from "react-daisyui";
 import { Link } from "react-router-dom";
+import { useAuth0 } from "@auth0/auth0-react";
 const { useState, useRef } = require("react");
 const { useSelector, useDispatch } = require("react-redux");
 const { theme, setTheme } = require("../../features/theme/themeSlice");
@@ -25,6 +26,7 @@ const Menus = [
 ];
 
 const AppNavbar = () => {
+  const { isAuthenticated, logout, loginWithPopup, user } = useAuth0();
   const menuRef = useRef(null);
   const profileRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -60,7 +62,7 @@ const AppNavbar = () => {
     >
       <Navbar className='container'>
         <Navbar.Start>
-          <div ref={menuRef} className="z-50">
+          <div ref={menuRef} className='z-50'>
             <Button
               color='ghost'
               shape='circle'
@@ -133,8 +135,11 @@ const AppNavbar = () => {
             >
               <div className='w-10 rounded-full'>
                 <img
-                  src='https://api.lorem.space/image/face?hash=33791'
-                  alt=''
+                  src={
+                    isAuthenticated ? user.picture : "/assets/img/user-logo.png"
+                  }
+                  alt={isAuthenticated ? user.name : "User Avatar"}
+                  referrerPolicy='no-referrer'
                 />
               </div>
             </Button>
@@ -148,19 +153,43 @@ const AppNavbar = () => {
                   isDark && "border-slate-900 bg-slate-800"
                 }`}
               >
-                <li>
-                  <Link
-                    to='/profile'
-                    className={`justify-between text-lg md:text-sm ${
-                      active === 4 && "bg-blue-600 font-bold text-white"
-                    }`}
-                    onClick={() => handleProfileClick(4)}
+                {isAuthenticated ? (
+                  <>
+                    <Form className='p-2'>
+                      <Form.Label
+                        title={user.name}
+                        className='font-bold'
+                      ></Form.Label>
+                    </Form>
+                    <li>
+                      <Link
+                        to='/profile'
+                        className={`justify-between text-lg md:text-sm ${
+                          active === 4 && "bg-blue-600 font-bold text-white"
+                        }`}
+                        onClick={() => handleProfileClick(4)}
+                      >
+                        Profile
+                      </Link>
+                    </li>
+                    <Dropdown.Item
+                      onClick={() =>
+                        logout({ returnTo: window.location.origin })
+                      }
+                    >
+                      Logout
+                    </Dropdown.Item>
+                  </>
+                ) : (
+                  <Dropdown.Item
+                    className='font-bold'
+                    onClick={() => loginWithPopup()}
                   >
-                    Profile
-                  </Link>
-                </li>
-                <Dropdown.Item>Logout</Dropdown.Item>
-                <Form className='bg-base-200 p-2 rounded-lg shadow'>
+                    Login
+                  </Dropdown.Item>
+                )}
+
+                <Form className='bg-base-200 rounded-lg shadow'>
                   <Form.Label>
                     {isDark ? (
                       <svg
