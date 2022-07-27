@@ -1,6 +1,6 @@
 import { Hero, Button } from "react-daisyui";
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useFetch } from "./hook/useFetch";
 import { theme } from "../features/theme/themeSlice";
 import { useSelector } from "react-redux";
 
@@ -26,15 +26,10 @@ const Services = [
 ];
 
 const Home = () => {
-  const [locations, setLocations] = useState([]);
   const appTheme = useSelector(theme);
   const [isDark, setIsDark] = useState(appTheme === "night");
 
-  useEffect(() => {
-    fetch("/api/locations")
-      .then((res) => res.json())
-      .then((data) => setLocations(data.locations));
-  }, []);
+  const { data, loading, error } = useFetch("/api/locations");
 
   useEffect(() => {
     setIsDark(appTheme === "night");
@@ -107,9 +102,10 @@ const Home = () => {
           <div className='flex mt-6 justify-center mb-16'>
             <div className='w-16 h-1 rounded-full bg-blue-500 inline-flex'></div>
           </div>
-          <div className='flex flex-wrap'>
-            {locations.map((location, index) => {
-              const isLast = index === locations.length - 1;
+          <div className='flex flex-wrap justify-center'>
+            {loading && <progress className='progress w-56'></progress>}
+            {data?.map((location, index) => {
+              const isLast = index === data.length - 1;
 
               return (
                 <div
@@ -118,7 +114,7 @@ const Home = () => {
                 >
                   <div
                     className={`flex-1 pt-6 px-4 flex justify-center text-center rounded-xl shadow-lg  border ${
-                      isDark ? "bg-slate-800 border-slate-700" : "bg-gray-100"
+                      isDark ? "bg-slate-800 border-slate-800" : "bg-gray-100 border-slate-300"
                     } ${
                       !isLast && "border-b"
                     } pb-10 md:pb-6 mb-10 border-gray-200`}
