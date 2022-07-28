@@ -1,4 +1,4 @@
-import { useOutside } from "./useOutside";
+import { useOutside } from "../../hook/useOutside";
 import { Button, Navbar, Form, Toggle, Dropdown } from "react-daisyui";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";

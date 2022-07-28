@@ -22,8 +22,12 @@ router.get("/", async (req, res) => {
       });
       return location;
     });
+    // filter out locations that status is not active
+    const activeLocations = response.result.locations.filter(
+      (location) => location.status === "ACTIVE"
+    );
 
-    res.send(response.result);
+    res.send(activeLocations);
   } catch (error) {
     console.log(error);
   }

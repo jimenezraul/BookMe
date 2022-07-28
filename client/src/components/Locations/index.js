@@ -1,10 +1,9 @@
-import { useFetch } from "../../pages/hook/useFetch";
+import { useFetch } from "../../hook/useFetch";
 import { useSelector } from "react-redux";
 import { theme } from "../../features/theme/themeSlice";
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 
-const Locations = ({ booknow }) => {
+const Locations = () => {
   const { data, loading, error } = useFetch("/api/locations");
   const appTheme = useSelector(theme);
   const [isDark, setIsDark] = useState(appTheme === "night");
@@ -24,14 +23,12 @@ const Locations = ({ booknow }) => {
         return (
           <div
             key={index}
-            className='p-2 flex w-10/12 md:w-4/12 justify-center mx-auto'
+            className={`${
+              isDark ? "bg-slate-800" : "bg-gray-100"
+            } p-2 flex flex-wrap w-11/12 justify-center pt-6 px-4 rounded-xl shadow-lg pb-10 md:pb-6 mb-10 border-gray-200`}
           >
-            <div
-              className={`flex-1 pt-6 px-4 flex text-center rounded-xl shadow-lg ${
-                isDark ? "bg-slate-800" : "bg-gray-100"
-              }  pb-10 md:pb-6 mb-10 border-gray-200`}
-            >
-              <div className='flex-grow flex flex-col justify-between text-center mt-6 sm:mt-0'>
+            <div className='w-full md:w-1/2 flex flex-col justify-center'>
+              <div className={`text-center md:text-end border-b md:border-b-0 md:border-r ${isDark ? "border-slate-700" : "border-slate-300"} p-5`}>
                 <h1 className='text-slate-500 text-2xl title-font font-medium mb-2'>
                   {location.businessName}
                 </h1>
@@ -41,32 +38,24 @@ const Locations = ({ booknow }) => {
                   {location.address.postalCode}
                 </p>
 
-                {!booknow ? (
-                  <>
-                    {/* phone number */}
-                    <a href={`tel:${location.phoneNumber}`}>
-                      <p className='leading-relaxed text-slate-500 mb-3 font-semibold'>
-                        {location.phoneNumber}
-                      </p>
-                    </a>
-                    <div className='leading-relaxed text-slate-500'>
-                      <h2 className='font-bold text-lg'>Business Hours</h2>
-                      {location.businessHours.periods.map((period, index) => (
-                        <div key={index}>
-                          <p>
-                            {period.dayOfWeek} - {period.open} - {period.close}
-                          </p>
-                        </div>
-                      ))}
-                    </div>
-                  </>
-                ) : (
-                  <Link to={`/booknow?location=${location.id}`}>
-                    <button className='bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded'>
-                      Let's Book Now
-                    </button>
-                  </Link>
-                )}
+                {/* phone number */}
+                <a href={`tel:${location.phoneNumber}`}>
+                  <p className='leading-relaxed text-slate-500 mb-3 font-semibold'>
+                    {location.phoneNumber}
+                  </p>
+                </a>
+              </div>
+            </div>
+            <div className='w-full md:w-1/2 md:text-start text-center p-5'>
+              <div className='leading-relaxed text-slate-500'>
+                <h2 className='font-bold text-lg'>Business Hours</h2>
+                {location.businessHours.periods.map((period, index) => (
+                  <div key={index}>
+                    <p>
+                      {period.dayOfWeek} - {period.open} - {period.close}
+                    </p>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
