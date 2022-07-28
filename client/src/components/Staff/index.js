@@ -16,55 +16,31 @@ const Staff = () => {
   if (error) {
     return <div>Error!</div>;
   }
-  console.log(staff);
+
   return (
-    <div>
+    <div className='flex flex-wrap justify-center w-full mb-5'>
       {loading && <progress className='progress w-56'></progress>}
 
-      <div className='overflow-x-auto w-full'>
-        <table className='table w-full'>
-          <thead>
-            <tr>
-              <th></th>
-              <th>Name</th>
-              <th>Job</th>
-              <th></th>
-              <th></th>
-            </tr>
-          </thead>
-
-          {staff?.map((staff, index) => {
-            return (
-              <tbody key={index}>
-                <tr>
-                  <th></th>
-                  <td>
-                    <div className='flex items-center space-x-3'>
-                      <div className='avatar'>
-                        <div className='mask mask-squircle w-12 h-12'>
-                          <img
-                            src={staff.profileImageUrl}
-                            alt='Avatar Tailwind CSS Component'
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <div className='font-bold'>{staff.displayName}</div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>{staff.description}</td>
-                  <th>
-                    <Link to={`/booknow?staff=${staff.teamMemberId}`}>
-                      <button className='btn btn-ghost btn-md'>Select</button>
-                    </Link>
-                  </th>
-                </tr>
-              </tbody>
-            );
-          })}
-        </table>
-      </div>
+      {staff?.map((staff, index) => (
+        <div key={index} className='flex w-full md:w-1/2 p-2'>
+          <div className='flex-1 card card-side bg-base-100 p- shadow-lg p-2 border border-base-300'>
+            <div className='pl-3 avatar flex flex-col justify-center'>
+              <div className='w-24 h-24 mask mask-squircle'>
+                <img src={staff.profileImageUrl} alt={staff.displayName} />
+              </div>
+            </div>
+            <div className='card-body'>
+              <h2 className='card-title'>{staff.displayName}</h2>
+              <p>{staff.description}</p>
+              <div className='card-actions justify-end'>
+                <Link to={`?staff=${staff.teamMemberId}`}>
+                  <button className='btn btn-primary'>View Services</button>
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      ))}
     </div>
   );
 };
