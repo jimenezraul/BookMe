@@ -1,8 +1,8 @@
-import { useOutside } from "../../hook/useOutside";
+import { useOutside } from "../../hooks/useOutside";
 import { Button, Navbar, Form, Toggle, Dropdown } from "react-daisyui";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
-const { useState, useRef } = require("react");
+const { useState, useRef, useEffect } = require("react");
 const { useSelector, useDispatch } = require("react-redux");
 const { theme, setTheme } = require("../../features/theme/themeSlice");
 
@@ -35,6 +35,14 @@ const AppNavbar = () => {
   const appTheme = useSelector(theme);
   const [active, setActive] = useState(0);
   const [isDark, setIsDark] = useState(appTheme === "night");
+
+  // get the current url path
+  const pathName = window.location.pathname;
+
+  useEffect(() => {
+    const index = Menus.findIndex((item) => item.path === pathName);
+    setActive(index === -1 ? 4 : index);
+  }, [pathName]);
 
   useOutside(menuRef, setIsOpen);
   useOutside(profileRef, setIsProfileOpen);

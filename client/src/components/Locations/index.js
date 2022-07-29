@@ -1,4 +1,4 @@
-import { useFetch } from "../../hook/useFetch";
+import { useFetch } from "../../hooks/useFetch";
 import { useSelector } from "react-redux";
 import { theme } from "../../features/theme/themeSlice";
 import { useState, useEffect } from "react";

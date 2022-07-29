@@ -14,10 +14,12 @@ const HeroSection = ({ title, subtitle, buttonName, link }) => {
         <div className='max-w-md'>
           <h1 className='text-5xl font-bold'>{title}</h1>
           <p className='py-6'>{subtitle}</p>
-          {buttonName && (
-            <Button className='text-white font-bold text-lg bg-blue-700 hover:bg-blue-800 border-0'>
-              <Link to={link}>{buttonName}</Link>
-            </Button>
+        {buttonName && (
+            <Link to={link}>
+              <Button className='text-white font-bold text-lg bg-blue-700 hover:bg-blue-800 border-0'>
+                {buttonName}
+              </Button>
+            </Link>
           )}
         </div>
       </Hero.Content>
