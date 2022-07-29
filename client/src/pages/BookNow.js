@@ -4,10 +4,10 @@ import { useState, useEffect } from "react";
 import Staff from "../components/Staff";
 import { Divider, Button, Steps } from "react-daisyui";
 import StaffServices from "../components/StaffServices";
+import BookCalendar from "../components/Calendar";
 
 const BookNow = () => {
   const navigate = useNavigate();
-  const [activeTitle, setActiveTitle] = useState("All Staff");
   // get query params from url
   const [searchParams] = useSearchParams();
   const staff = searchParams.get("staff");
@@ -15,26 +15,17 @@ const BookNow = () => {
   const date = searchParams.get("date");
   const time = searchParams.get("time");
 
-  useEffect(() => {
-    if (time) {
-      setActiveTitle("Confirm");
-    } else if (date) {
-      setActiveTitle("Select Time");
-    } else if (services) {
-      setActiveTitle("Select Date");
-    } else if (staff) {
-      setActiveTitle("Select Service");
-    } else {
-      setActiveTitle("All Staff");
-    }
-  }, [staff, services, time, date]);
+  let calendar;
+  if (services && !date) {
+    calendar = <BookCalendar staff={staff} service={services} />;
+  }
 
   return (
     <div className='flex-1 flex flex-col justify-center items-center'>
       <div className='container'>
         <HeroSection title='Appointments' />
       </div>
-      <div className='p-2 w-full container'>
+      <div className='p-3 w-full container'>
         <div className='pt-3 flex justify-center'>
           <Steps>
             <Steps.Step color='primary'>Staff</Steps.Step>
@@ -52,6 +43,7 @@ const BookNow = () => {
         )}
         {!staff && <Staff />}
         {!services && <StaffServices staff={staff} />}
+        {calendar}
       </div>
     </div>
   );
