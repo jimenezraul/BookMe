@@ -74,7 +74,7 @@ const Home = () => {
       <section className='text-gray-600 body-font w-full'>
         <div className='container py-24 mx-auto'>
           <h1 className='text-center sm:text-3xl text-2xl font-medium title-font text-base-400 mb-4'>
-            Our Locations
+            Our Location
           </h1>
           <div className='flex mt-6 justify-center mb-16'>
             <div className='w-16 h-1 rounded-full bg-blue-500 inline-flex'></div>

@@ -113,14 +113,17 @@ const AppNavbar = () => {
                   <li key={index}>
                     <Link
                       to={menu.path}
-                      key={index}
                       onClick={() => handleMenuClick(index)}
-                      className={`p-2 text-lg md:text-sm ${
-                        active === index &&
-                        "bg-blue-600 visited:bg-blue-700 rounded-md font-bold text-white"
+                      className={`text-lg md:text-sm p-0 ${
+                        active === index && "font-bold text-white"
                       }`}
                     >
-                      {menu.name}
+                      <Button
+                        color={`${active === index ? "primary" : "ghost"}`}
+                        className='flex justify-start w-full'
+                      >
+                        {menu.name}
+                      </Button>
                     </Link>
                   </li>
                 ))}
@@ -172,12 +175,17 @@ const AppNavbar = () => {
                     <li>
                       <Link
                         to='/profile'
-                        className={`justify-between text-lg md:text-sm ${
-                          active === 4 && "bg-blue-600 font-bold text-white"
+                        className={`p-0 text-lg md:text-sm ${
+                          active === 4 && "font-bold text-white"
                         }`}
                         onClick={() => handleProfileClick(4)}
                       >
-                        Profile
+                        <Button
+                          color={`${active === 4 ? "primary" : "ghost"}`}
+                          className='flex justify-start w-full'
+                        >
+                          Profile
+                        </Button>
                       </Link>
                     </li>
                     <Dropdown.Item

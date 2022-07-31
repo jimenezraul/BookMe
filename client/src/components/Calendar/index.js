@@ -16,7 +16,7 @@ const BookCalendar = ({ staff, service }) => {
   return (
     <div className='flex justify-center'>
       <div className='w-full sm:w-10/12 md:w-8/12 lg:w-1/2'>
-        <Card className='bg-base-300 p-10 rounded-xl mt-2'>
+        <Card className='bg-base-300 p-5 rounded-xl mt-2'>
           <Card.Body className='p-0'>
             <div>
               <Calendar

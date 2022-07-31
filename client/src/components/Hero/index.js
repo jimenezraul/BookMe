@@ -16,7 +16,7 @@ const HeroSection = ({ title, subtitle, buttonName, link }) => {
           <p className='py-6'>{subtitle}</p>
         {buttonName && (
             <Link to={link}>
-              <Button className='text-white font-bold text-lg bg-blue-700 hover:bg-blue-800 border-0'>
+              <Button color="primary" className='text-white font-bold text-lg border-0'>
                 {buttonName}
               </Button>
             </Link>

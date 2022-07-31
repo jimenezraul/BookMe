@@ -1,13 +1,16 @@
 import { useFetch } from "../../hooks/useFetch";
 import { Link } from "react-router-dom";
 import { Divider } from "react-daisyui";
+import { useDispatch } from "react-redux";
+import { setAppointment } from "../../features/appointments/appointmentSlice";
 
 const StaffServices = ({ staff }) => {
+  const dispatch = useDispatch();
   const { data, loading, error } = useFetch(`/api/services/${staff}`);
   if (error) {
     return <div>Error!</div>;
   }
-
+  console.log(data);
   return (
     <div className='staff-services'>
       <div className='container'>
@@ -36,7 +39,16 @@ const StaffServices = ({ staff }) => {
                           </div>
                           <div className='w-full card-actions justify-end'>
                             <Link
-                              to={`?staff=${staff}&services=${variation.itemVariationData.itemId}`}
+                              onClick={() =>
+                                dispatch(
+                                  setAppointment({
+                                    ...variation,
+                                    category: service.itemData.name,
+                                    price: price,
+                                  })
+                                )
+                              }
+                              to={`?staff=${staff}&services=${variation.id}`}
                             >
                               <button className='btn btn-primary'>
                                 Book Now

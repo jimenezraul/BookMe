@@ -1,10 +1,11 @@
 import HeroSection from "../components/Hero";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
 import Staff from "../components/Staff";
 import { Divider, Button, Steps } from "react-daisyui";
 import StaffServices from "../components/StaffServices";
 import BookCalendar from "../components/Calendar";
+import BookTime from "../components/BookTime";
+import Confirm from "../components/Confirm";
 
 const BookNow = () => {
   const navigate = useNavigate();
@@ -15,9 +16,28 @@ const BookNow = () => {
   const date = searchParams.get("date");
   const time = searchParams.get("time");
 
-  let calendar;
+  let calendar, timeSection, confirm, staffSection, servicesSection;
+
+  if (!staff) {
+    staffSection = <Staff />;
+  }
+
+  if (staff && !services) {
+    servicesSection = <StaffServices staff={staff} />;
+  }
+
   if (services && !date) {
     calendar = <BookCalendar staff={staff} service={services} />;
+  }
+
+  if (date && !time) {
+    timeSection = <BookTime staff={staff} services={services} date={date} />;
+  }
+
+  if (date && time) {
+    confirm = (
+      <Confirm staff={staff} services={services} date={date} time={time} />
+    );
   }
 
   return (
@@ -41,9 +61,11 @@ const BookNow = () => {
             Back
           </Button>
         )}
-        {!staff && <Staff />}
-        {!services && <StaffServices staff={staff} />}
+        {staffSection}
+        {servicesSection}
         {calendar}
+        {timeSection}
+        {confirm}
       </div>
     </div>
   );
