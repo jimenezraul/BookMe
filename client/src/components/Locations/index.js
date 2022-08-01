@@ -1,6 +1,6 @@
 import { useFetch } from "../../hooks/useFetch";
 import { useSelector } from "react-redux";
-import { theme } from "../../features/theme/themeSlice";
+import { theme } from "../../app/storeSlices/theme/themeSlice";
 import { useState, useEffect } from "react";
 
 const Locations = () => {

@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
-import counterReducer from "../features/counter/counterSlice";
-import themeReducer from "../features/theme/themeSlice";
-import appointmentReducer from "../features/appointments/appointmentSlice";
+import counterReducer from "./storeSlices/counter/counterSlice";
+import themeReducer from "./storeSlices/theme/themeSlice";
+import appointmentReducer from "./storeSlices/appointments/appointmentSlice";
+import guestReducer from "./storeSlices/guest/guestSlice";
 
 export const store = configureStore({
   reducer: {
     counter: counterReducer,
     theme: themeReducer,
     appointments: appointmentReducer,
+    guest: guestReducer,
   },
 });

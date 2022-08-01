@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  appointment: {},
+  appointment: null,
 };
 
 export const appointmentSlice = createSlice({
@@ -12,7 +12,7 @@ export const appointmentSlice = createSlice({
       state.appointment = action.payload;
     },
     deleteAppointment: (state, action) => {
-      state.appointment = {};
+      state.appointment = null;
     },
   },
 });

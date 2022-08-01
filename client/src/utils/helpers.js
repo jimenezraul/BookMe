@@ -1,3 +1,53 @@
+export function formatPhoneNumber(phoneNumberString, prevousValue) {
+  if (phoneNumberString.length < prevousValue.length) {
+    return phoneNumberString;
+  }
+  // if number contains ( and - ) remove them
+  if (phoneNumberString.includes("(") && phoneNumberString.includes(")")) {
+    phoneNumberString = phoneNumberString.replace(/[()]/g, "");
+  }
+  // if number contains - remove them
+  if (phoneNumberString.includes("-")) {
+    phoneNumberString = phoneNumberString.replace(/-/g, "");
+  }
+  const phone = phoneNumberString
+    .replace(/\D/g, "")
+    .match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+
+  return `(${phone[1]}) ${phone[2]}-${phone[3]}`;
+}
+
+export function validation(value, type) {
+  // validate first name, last name, email, phone
+  if (type === "firstName") {
+    if (value.length < 3) {
+      return "First name must be at least 3 characters";
+    }
+  }
+  if (type === "lastName") {
+    if (value.length < 3) {
+      return "Last name must be at least 3 characters";
+    }
+  }
+  if (type === "email") {
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+      return "Invalid email address";
+    }
+  }
+  if (type === "phone") {
+    //check if number is in format (XXX) XXX-XXXX
+      console.log(value);
+    if (value.length < 14) {
+      return "Phone number must be at least 10 Digits";
+    }
+      
+    if (!/^\(\d{3}\)\s\d{3}-\d{4}$/.test(value)) {
+      return "Invalid phone number";
+    }
+  }
+  return "";
+}
+
 export function idbPromise(storeName, method, object) {
   return new Promise((resolve, reject) => {
     // open connection to the database `shop-shop` with the version of 1

@@ -1,12 +1,12 @@
 import {
   appointment,
   setAppointment,
-} from "../../features/appointments/appointmentSlice";
+} from "../../app/storeSlices/appointments/appointmentSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { idbPromise } from "../../utils/helpers";
-import { useEffect, useState } from "react";
-import { Divider } from "react-daisyui";
+import { useEffect } from "react";
+import { Divider, Button } from "react-daisyui";
 
 const { useSelector, useDispatch } = require("react-redux");
 
@@ -14,15 +14,22 @@ const Confirm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const data = useSelector(appointment);
-  const { isAuthenticated, logout, loginWithPopup, user } = useAuth0();
+  const { isAuthenticated, loginWithPopup } = useAuth0();
 
   useEffect(() => {
-    if (Object.keys(data).length === 0) {
-      idbPromise("appointments", "get").then((data) => {
-        dispatch(setAppointment(data[0]));
-      });
+    if (!data) {
+      async function handleAppointment() {
+        const appointLocal = await idbPromise("appointments", "get");
+
+        if (appointLocal.length > 0) {
+          dispatch(setAppointment(appointLocal[0]));
+          return;
+        }
+        navigate("/booknow");
+      }
+      handleAppointment();
     }
-  }, [data, dispatch]);
+  }, [data, dispatch, navigate]);
 
   const cancelHandler = () => {
     idbPromise("appointments", "delete", { ...data });
@@ -30,7 +37,6 @@ const Confirm = () => {
     navigate("/booknow");
   };
 
-  console.log(data);
   return (
     <div className='flex flex-wrap justify-center w-full mb-5'>
       <div className='flex w-full md:w-1/2'>
@@ -52,17 +58,38 @@ const Confirm = () => {
               {data?.time?.appointmentSegments[0].durationMinutes} min service
             </p>
             <div className='card-actions justify-end mt-5'>
-              <button
-                onClick={cancelHandler}
-                className='btn bg-red-500 border-0 hover:bg-red-800 text-white'
-              >
-                Cancel
-              </button>
+              {isAuthenticated ? (
+                <>
+                  <Button
+                    onClick={cancelHandler}
+                    className='bg-red-500 border-0 hover:bg-red-700 text-white'
+                  >
+                    Cancel
+                  </Button>
 
-              <Link to=''>
-                <button className='btn btn-primary'>Confirm</button>
-              </Link>
+                  <Link to=''>
+                    <Button color='primary'>Confirm</Button>
+                  </Link>
+                </>
+              ) : (
+                <button
+                  onClick={() => loginWithPopup()}
+                  className='btn btn-primary'
+                >
+                  Login To Confirm
+                </button>
+              )}
             </div>
+            {!isAuthenticated && (
+              <>
+                <Divider>or</Divider>
+                <div className='card-actions justify-end mt-5'>
+                  <Link to='/guest'>
+                    <Button color='primary'>Continue as Guest</Button>
+                  </Link>
+                </div>
+              </>
+            )}
           </div>
         </div>
       </div>

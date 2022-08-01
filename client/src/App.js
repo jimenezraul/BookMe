@@ -1,6 +1,6 @@
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { theme } from "./features/theme/themeSlice";
+import { theme } from "./app/storeSlices/theme/themeSlice";
 import { Theme } from "react-daisyui";
 import { useSelector } from "react-redux";
 
@@ -8,6 +8,8 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import Footer from "./components/Footer";
 import BookNow from "./pages/BookNow";
+import Guest from "./pages/Guest";
+import CashApp from "./pages/CashApp";
 
 function App() {
   const appTheme = useSelector(theme);
@@ -21,6 +23,8 @@ function App() {
             <Routes>
               <Route path='/' element={<Home />} />
               <Route path='/booknow' element={<BookNow />} />
+              <Route path='/guest' element={<Guest />} />
+              <Route path='/cashapp-pay' element={<CashApp />} />
             </Routes>
           </div>
           <Footer />

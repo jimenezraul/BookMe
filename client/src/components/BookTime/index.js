@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import {
   setAppointment,
   appointment,
-} from "../../features/appointments/appointmentSlice";
+} from "../../app/storeSlices/appointments/appointmentSlice";
 import { idbPromise } from "../../utils/helpers";
 
 const BookTime = ({ staff, services, date }) => {

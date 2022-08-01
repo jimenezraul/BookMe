@@ -2,7 +2,7 @@ import { useFetch } from "../../hooks/useFetch";
 import { Link } from "react-router-dom";
 import { Divider } from "react-daisyui";
 import { useDispatch } from "react-redux";
-import { setAppointment } from "../../features/appointments/appointmentSlice";
+import { setAppointment } from "../../app/storeSlices/appointments/appointmentSlice";
 
 const StaffServices = ({ staff }) => {
   const dispatch = useDispatch();
@@ -10,7 +10,7 @@ const StaffServices = ({ staff }) => {
   if (error) {
     return <div>Error!</div>;
   }
-  console.log(data);
+
   return (
     <div className='staff-services'>
       <div className='container'>

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 const { useState, useRef, useEffect } = require("react");
 const { useSelector, useDispatch } = require("react-redux");
-const { theme, setTheme } = require("../../features/theme/themeSlice");
+const { theme, setTheme } = require("../../app/storeSlices/theme/themeSlice");
 
 const Menus = [
   {
