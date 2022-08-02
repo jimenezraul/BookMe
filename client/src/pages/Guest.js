@@ -11,6 +11,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { idbPromise } from "../utils/helpers";
 import Payments from "../components/Payments";
+import { v4 as uuid } from "uuid";
 
 const Guest = () => {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ const Guest = () => {
   }, [navigate, dispatch]);
 
   const [formData, setFormData] = useState({
+    id: uuid(),
     firstName: "",
     lastName: "",
     email: "",
@@ -59,7 +61,7 @@ const Guest = () => {
     navigate("/booknow");
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     // prevent default action
     e.preventDefault();
     // for each key in formData, check if there is an error
@@ -71,6 +73,7 @@ const Guest = () => {
       }
     }
     // if no error, send data to server
+    await idbPromise("guest", "put", { ...formData });
     dispatch(setGuest(formData));
     setPayment(true);
   };
@@ -135,7 +138,11 @@ const Guest = () => {
                 Cancel
               </Button>
 
-              <Button color='primary' className='flex flex-1 text-white' type='submit'>
+              <Button
+                color='primary'
+                className='flex flex-1 text-white'
+                type='submit'
+              >
                 Next
               </Button>
             </div>

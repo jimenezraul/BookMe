@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Card } from "react-daisyui";
+import { Card, Divider } from "react-daisyui";
 import { useSelector, useDispatch } from "react-redux";
 import {
   appointment,
@@ -7,11 +7,18 @@ import {
 } from "../app/storeSlices/appointments/appointmentSlice";
 import { idbPromise } from "../utils/helpers";
 import { useNavigate } from "react-router-dom";
+import { cashAppInit } from "../utils/helpers";
+import { guest, setGuest } from "../app/storeSlices/guest/guestSlice";
 
 const CashApp = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const appointments = useSelector(appointment);
+  const guestInfo = useSelector(guest);
+  const [status, setStatus] = useState(null);
+  const paymentAmount = useRef();
+  const cashAppPayEl = useRef();
+  const paymentStatus = useRef();
 
   useEffect(() => {
     async function appointments() {
@@ -25,140 +32,83 @@ const CashApp = () => {
     appointments();
   }, [dispatch, navigate]);
 
-  const paymentForm = useRef();
-  const paymentAmount = useRef();
-  const cashAppPayEl = useRef();
-  const paymentStatus = useRef();
-  const [containerStatus, setContainerStatus] = useState("");
-
-  var amount = appointments?.price.toString();
-
-  const appId = "sandbox-sq0idb-uc1hM_aoBdq14A5bJynh9Q";
-  const locationId = "L9XMGJMVQGY2D";
-
-  function buildPaymentRequest(payments) {
-    const paymentRequest = payments.paymentRequest({
-      countryCode: "US",
-      currencyCode: "USD",
-      total: {
-        amount: amount,
-        label: "Total",
-      },
-    });
-    return paymentRequest;
-  }
-
-  async function initializeCashApp(payments) {
-    const paymentRequest = buildPaymentRequest(payments);
-    const cashAppPay = await payments.cashAppPay(paymentRequest, {
-      redirectURL: window.location.href,
-      referenceId: "my-website-00000001",
-    });
-    const buttonOptions = {
-      shape: "semiround",
-      width: "full",
-    };
-    await cashAppPay.attach(cashAppPayEl.current, buttonOptions);
-    return cashAppPay;
-  }
-
-  async function createPayment(token) {
-    const body = JSON.stringify({
-      amount: amount,
-      sourceId: token,
-    });
-
-    const paymentResponse = await fetch(
-      "http://localhost:3001/api/payments/cashapp",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body,
+  useEffect(() => {
+    if (!guestInfo) {
+      async function guest() {
+        const guestLocal = await idbPromise("guest", "get");
+        if (guestLocal.length > 0) {
+          dispatch(setGuest(guestLocal[0]));
+          return;
+        }
+        navigate("/booknow");
       }
-    );
-
-    if (paymentResponse.ok) {
-      return paymentResponse.json();
+      guest();
     }
+  }, [dispatch, guestInfo, navigate]);
 
-    const errorBody = await paymentResponse.text();
-    throw new Error(errorBody);
-  }
-
-  // status is either SUCCESS or FAILURE;
-  function displayPaymentResults(status) {
-    if (status === "SUCCESS") {
-      setContainerStatus("is-success");
-    } else {
-      setContainerStatus("is-failure");
-    }
-  }
+  let amount = appointments?.price.toString();
 
   useEffect(() => {
-    async function Initialize() {
-      paymentAmount.current.innerHTML = "Pay $" + amount;
+    // remove paymentStatus from the DOM
+    paymentStatus.current.innerHTML = "";
+    cashAppInit(
+      amount,
+      paymentStatus.current,
+      paymentAmount.current,
+      paymentStatus.current,
+      setStatus
+    );
+  }, [amount]);
 
-      if (!window.Square) {
-        throw new Error("Square.js failed to load properly");
-      }
-
-      let payments;
-      try {
-        payments = window.Square.payments(appId, locationId);
-      } catch {
-        const statusContainer = paymentStatus.current;
-        statusContainer.className = "missing-credentials";
-        statusContainer.style.visibility = "visible";
-        return;
-      }
-
-      let cashAppPay;
-
-      cashAppPay = await initializeCashApp(payments);
-
-      if (cashAppPay) {
-        cashAppPay.addEventListener(
-          "ontokenization",
-          async function ({ detail }) {
-            const tokenResult = detail.tokenResult;
-            if (tokenResult.status === "OK") {
-              const paymentResults = await createPayment(tokenResult.token);
-
-              displayPaymentResults("SUCCESS");
-              console.debug("Payment Success", paymentResults);
-            } else {
-              let errorMessage = `Tokenization failed with status: ${tokenResult.status}`;
-
-              if (tokenResult.errors) {
-                errorMessage += ` and errors: ${JSON.stringify(
-                  tokenResult.errors
-                )}`;
-              }
-              displayPaymentResults("FAILURE");
-              throw new Error(errorMessage);
-            }
-          }
-        );
-      }
+  useEffect(() => {
+    if (status === "success") {
+      idbPromise("appointments", "delete", { ...appointments });
+      idbPromise("guest", "delete", { ...guestInfo });
+      dispatch(setAppointment(null));
+      dispatch(setGuest(null));
+      navigate("/profile");
+      return;
     }
-    Initialize();
-  }, [appointments]);
+    if (status === "failure") {
+      navigate("/cashapp-error");
+      return;
+    }
+  }, [status, dispatch, navigate, appointments, guestInfo]);
 
   return (
-    <div className='flex-1 flex flex-col justify-center items-center'>
-      <div className='container mt-10'>
-        <Card className='bg-base-300'>
-          <Card.Body>
-            <form ref={paymentForm}>
-              <p ref={paymentAmount}></p>
+    <div className='flex-1 flex flex-col justify-center items-center px-2'>
+      <div className='mt-10 w-full max-w-md'>
+        <h1 className='text-center p-5 text-xl font-bold'>
+          Complete your Appointment
+        </h1>
+        <Card className='bg-base-300 mb-2 shadow-md'>
+          <Card.Body className='w-full max-w-md'>
+            <h1 className='text-xl font-bold'>Customer info</h1>
+            <Divider className='p-0 m-0' />
+            <div className='px-2 mb-3'>
+              <p className='font-semibold'>
+                Name: {guestInfo?.firstName} {guestInfo?.lastName}
+              </p>
+              <p className='font-semibold'>Email: {guestInfo?.email}</p>
+              <p>Phone: {guestInfo?.phone}</p>
+            </div>
+          </Card.Body>
+        </Card>
+        <Card className='bg-base-300 shadow-md mb-5'>
+          <Card.Body className='w-full max-w-md'>
+            <h1 className='text-xl font-bold'>{appointments?.category}</h1>
+            <Divider className='p-0 m-0' />
+            <div className='px-2'>
+              <p>{appointments?.itemVariationData.name}</p>
+              <p>{appointments?.time.date}</p>
+              <p>at {appointments?.time.open}</p>
+              <p
+                className='font-bold text-2xl text-end mt-3'
+                ref={paymentAmount}
+              ></p>
               <div ref={cashAppPayEl}></div>
-            </form>
-            <div
-              ref={paymentStatus}
-              className={`${containerStatus !== "" && containerStatus}`}
-            ></div>
+            </div>
+            <div ref={paymentStatus}></div>
           </Card.Body>
         </Card>
       </div>

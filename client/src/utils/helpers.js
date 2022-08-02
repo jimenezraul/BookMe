@@ -38,7 +38,7 @@ export function validation(value, type) {
     if (value.length < 14) {
       return "Phone number must be at least 10 Digits";
     }
-      
+
     if (!/^\(\d{3}\)\s\d{3}-\d{4}$/.test(value)) {
       return "Invalid phone number";
     }
@@ -59,6 +59,7 @@ export function idbPromise(storeName, method, object) {
       const db = request.result;
       // create object store for each type of data and set "primary" key index to be the `id` of the data
       db.createObjectStore("appointments", { keyPath: "id" });
+      db.createObjectStore("guest", { keyPath: "id" });
     };
 
     // handle any errors with connecting
@@ -105,4 +106,138 @@ export function idbPromise(storeName, method, object) {
       };
     };
   });
+}
+
+export function cashAppInit(
+  amount,
+  cashAppPayEl,
+  cashAppPriceDiv,
+  cachAppContainer,
+  setStatus
+) {
+  const appId = "sandbox-sq0idb-uc1hM_aoBdq14A5bJynh9Q";
+  const locationId = "L9XMGJMVQGY2D";
+
+  if (amount === undefined) {
+    return;
+  }
+  console.log(amount);
+  function buildPaymentRequest(payments) {
+    const paymentRequest = payments.paymentRequest({
+      countryCode: "US",
+      currencyCode: "USD",
+      total: {
+        amount: amount,
+        label: "Total",
+      },
+    });
+    return paymentRequest;
+  }
+
+  async function initializeCashApp(payments) {
+    const paymentRequest = buildPaymentRequest(payments);
+
+    const cashAppPay = await payments.cashAppPay(paymentRequest, {
+      redirectURL: window.location.href,
+      referenceId: "my-website-00000001",
+    });
+
+    const buttonOptions = {
+      shape: "semiround",
+      width: "full",
+    };
+    try {
+      await cashAppPay.attach(cashAppPayEl, buttonOptions);
+    } catch (e) {
+      if(e.message.match('already rendered')){
+        await cashAppPay.destroy();
+        await cashAppPay.attach(cashAppPayEl, buttonOptions);
+    }
+    }
+
+    return cashAppPay;
+  }
+
+  async function createPayment(token) {
+    const body = JSON.stringify({
+      amount: amount,
+      sourceId: token,
+    });
+
+    const paymentResponse = await fetch("/api/payments/cashapp", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body,
+    });
+
+    if (paymentResponse.ok) {
+      return paymentResponse.json();
+    }
+
+    const errorBody = await paymentResponse.text();
+    throw new Error(errorBody);
+  }
+
+  // status is either SUCCESS or FAILURE;
+  function displayPaymentResults(status) {
+    if (status === "SUCCESS") {
+      console.log("success");
+    } else {
+      console.log("failure");
+    }
+  }
+
+  async function Initialize() {
+    cashAppPriceDiv.innerHTML = "Pay $" + amount;
+
+    if (!window.Square) {
+      throw new Error("Square.js failed to load properly");
+    }
+
+    let payments;
+    try {
+      payments = window.Square.payments(appId, locationId);
+    } catch {
+      const statusContainer = cachAppContainer;
+      statusContainer.className = "missing-credentials";
+      statusContainer.style.visibility = "visible";
+      return;
+    }
+
+    let cashAppPay;
+    console.log("checking object", cashAppPay);
+    try {
+      cashAppPay = await initializeCashApp(payments);
+    } catch (error) {
+      console.log("hello",error);
+    }
+
+    if (cashAppPay) {
+      cashAppPay.addEventListener(
+        "ontokenization",
+        async function ({ detail }) {
+          const tokenResult = detail.tokenResult;
+          if (tokenResult.status === "OK") {
+            const paymentResults = await createPayment(tokenResult.token);
+            displayPaymentResults("SUCCESS");
+            setStatus("success");
+            console.debug("Payment Success", paymentResults);
+          } else {
+            let errorMessage = `Tokenization failed with status: ${tokenResult.status}`;
+
+            if (tokenResult.errors) {
+              errorMessage += ` and errors: ${JSON.stringify(
+                tokenResult.errors
+              )}`;
+            }
+            displayPaymentResults("FAILURE");
+            throw new Error(errorMessage);
+          }
+        }
+      );
+    }
+  }
+  Initialize();
 }
