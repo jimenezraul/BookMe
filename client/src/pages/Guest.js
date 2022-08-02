@@ -10,11 +10,13 @@ import {
 } from "../app/storeSlices/appointments/appointmentSlice";
 import { useNavigate } from "react-router-dom";
 import { idbPromise } from "../utils/helpers";
+import Payments from "../components/Payments";
 
 const Guest = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const selectedService = useSelector(appointment);
+  const [payment, setPayment] = useState(false);
 
   useEffect(() => {
     async function handleAppointment() {
@@ -70,7 +72,7 @@ const Guest = () => {
     }
     // if no error, send data to server
     dispatch(setGuest(formData));
-    navigate("/cashapp-pay");
+    setPayment(true);
   };
 
   return (
@@ -78,66 +80,72 @@ const Guest = () => {
       <div className='container'>
         <HeroSection title='Book as Guest' />
       </div>
-      <div className='w-full max-w-xs'>
-        <form
-          onSubmit={(e) => onSubmit(e)}
-          className='flex flex-col space-y-3 bg-base-300 shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-5'
-        >
-          <h1 className='text-2xl font-bold mb-2'>Guest Info</h1>
-          <div>
-            <input
-              className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-              name='firstName'
-              onBlur={handleValidation}
-              type='text'
-              placeholder='First Name'
-            />
-          </div>
-          <div>
-            <input
-              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-              name='lastName'
-              onBlur={handleValidation}
-              type='text'
-              placeholder='Last Name'
-            />
-          </div>
-          <div>
-            <input
-              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-              name='email'
-              onBlur={handleValidation}
-              type='email'
-              placeholder='Email'
-            />
-          </div>
-          <div>
-            <input
-              className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-              name='phone'
-              onBlur={handleValidation}
-              onChange={(e) => phoneHandler(e)}
-              value={formData.phone}
-              type='tel'
-              placeholder='Phone Number'
-            />
-          </div>
-          <p className='text-red-600'>{formData.error && formData.error}</p>
-          <div className='flex items-center justify-end space-x-2'>
-            <Button
-              type='button'
-              className='border-0 text-white bg-red-500 hover:bg-red-700'
-              onClick={handleCancel}
-            >
-              Cancel
-            </Button>
+      {!payment ? (
+        <div className='w-full max-w-xs'>
+          <form
+            onSubmit={(e) => onSubmit(e)}
+            className='flex flex-col space-y-3 bg-base-300 shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-5'
+          >
+            <h1 className='text-2xl font-bold mb-2'>Guest Info</h1>
+            <div>
+              <input
+                className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                name='firstName'
+                onBlur={handleValidation}
+                type='text'
+                placeholder='First Name'
+              />
+            </div>
+            <div>
+              <input
+                className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                name='lastName'
+                onBlur={handleValidation}
+                type='text'
+                placeholder='Last Name'
+              />
+            </div>
+            <div>
+              <input
+                className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                name='email'
+                onBlur={handleValidation}
+                type='email'
+                placeholder='Email'
+              />
+            </div>
+            <div>
+              <input
+                className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+                name='phone'
+                onBlur={handleValidation}
+                onChange={(e) => phoneHandler(e)}
+                value={formData.phone}
+                type='tel'
+                placeholder='Phone Number'
+              />
+            </div>
+            <p className='text-red-600'>{formData.error && formData.error}</p>
+            <div className='flex items-center justify-end space-x-2'>
+              <Button
+                type='button'
+                className='flex flex-1 border-0 text-white bg-red-500 hover:bg-red-700'
+                onClick={handleCancel}
+              >
+                Cancel
+              </Button>
 
-            <Button color='primary' className='text-white' type='submit'>
-              Next
-            </Button>
-          </div>
-        </form>
-      </div>
+              <Button color='primary' className='flex flex-1 text-white' type='submit'>
+                Next
+              </Button>
+            </div>
+          </form>
+        </div>
+      ) : (
+        <div className='w-full'>
+          <Payments />
+        </div>
+      )}
     </div>
   );
 };

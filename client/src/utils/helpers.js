@@ -35,8 +35,6 @@ export function validation(value, type) {
     }
   }
   if (type === "phone") {
-    //check if number is in format (XXX) XXX-XXXX
-      console.log(value);
     if (value.length < 14) {
       return "Phone number must be at least 10 Digits";
     }
