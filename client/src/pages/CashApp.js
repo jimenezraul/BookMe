@@ -8,7 +8,6 @@ import { useIdbPromise } from "../hooks/useIdbPromise";
 const CashApp = () => {
   const navigate = useNavigate();
   const [status, setStatus] = useState(null);
-  const paymentAmount = useRef();
   const cashAppPayEl = useRef();
   const paymentStatus = useRef();
 
@@ -22,8 +21,6 @@ const CashApp = () => {
       cashAppInit(
         amount,
         paymentStatus.current,
-        paymentAmount.current,
-        paymentStatus.current,
         setStatus
       );
     }
@@ -31,9 +28,9 @@ const CashApp = () => {
 
   useEffect(() => {
     if (status === "success") {
-      idbPromise("appointments", "delete", { ...appointments });
-      idbPromise("guest", "delete", { ...guestInfo });
-      navigate("/profile");
+      // idbPromise("appointments", "delete", { ...appointments });
+      // idbPromise("guest", "delete", { ...guestInfo });
+      navigate("/cashapp-success");
       return;
     }
     if (status === "failure") {

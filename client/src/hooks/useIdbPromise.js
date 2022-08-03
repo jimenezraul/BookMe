@@ -10,7 +10,10 @@ export const useIdbPromise = (table, method, params) => {
     const fetchData = async () => {
       try {
         const response = await idbPromise(table, method, params);
-        const item = await response[0];
+        let item;
+        if (response.length > 0) {
+          item = response[0];
+        } 
         setData(item);
         setLoading(false);
       } catch (error) {

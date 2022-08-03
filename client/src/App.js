@@ -10,6 +10,7 @@ import Footer from "./components/Footer";
 import BookNow from "./pages/BookNow";
 import Guest from "./pages/Guest";
 import CashApp from "./pages/CashApp";
+import CashAppSuccess from "./pages/CashAppSuccess";
 
 function App() {
   const appTheme = useSelector(theme);
@@ -25,6 +26,7 @@ function App() {
               <Route path='/booknow' element={<BookNow />} />
               <Route path='/guest' element={<Guest />} />
               <Route path='/cashapp-pay' element={<CashApp />} />
+              <Route path='/cashapp-success' element={<CashAppSuccess />} />
             </Routes>
           </div>
           <Footer />

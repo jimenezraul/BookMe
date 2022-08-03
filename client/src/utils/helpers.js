@@ -60,6 +60,7 @@ export function idbPromise(storeName, method, object) {
       // create object store for each type of data and set "primary" key index to be the `id` of the data
       db.createObjectStore("appointments", { keyPath: "id" });
       db.createObjectStore("guest", { keyPath: "id" });
+      db.createObjectStore("payment", { keyPath: "id" });
     };
 
     // handle any errors with connecting
@@ -108,13 +109,7 @@ export function idbPromise(storeName, method, object) {
   });
 }
 
-export function cashAppInit(
-  amount,
-  cashAppPayEl,
-  cashAppPriceDiv,
-  cachAppContainer,
-  setStatus
-) {
+export function cashAppInit(amount, cashAppPayEl, setStatus) {
   const appId = "sandbox-sq0idb-uc1hM_aoBdq14A5bJynh9Q";
   const locationId = "L9XMGJMVQGY2D";
 
@@ -199,10 +194,7 @@ export function cashAppInit(
     try {
       payments = window.Square.payments(appId, locationId);
     } catch {
-      const statusContainer = cachAppContainer;
-      statusContainer.className = "missing-credentials";
-      statusContainer.style.visibility = "visible";
-      return;
+      throw new Error("Something went wrong with the Square.js library");
     }
 
     let cashAppPay;
@@ -222,7 +214,7 @@ export function cashAppInit(
             const paymentResults = await createPayment(tokenResult.token);
             displayPaymentResults("SUCCESS");
             setStatus("success");
-            console.debug("Payment Success", paymentResults);
+            idbPromise("payment", "put", paymentResults.payment);
           } else {
             let errorMessage = `Tokenization failed with status: ${tokenResult.status}`;
 
