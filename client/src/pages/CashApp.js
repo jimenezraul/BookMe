@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Card, Divider } from "react-daisyui";
+import { Card, Divider, Badge } from "react-daisyui";
 import { useSelector, useDispatch } from "react-redux";
 import {
   appointment,
@@ -49,15 +49,15 @@ const CashApp = () => {
   let amount = appointments?.price.toString();
 
   useEffect(() => {
-    // remove paymentStatus from the DOM
-    paymentStatus.current.innerHTML = "";
-    cashAppInit(
-      amount,
-      paymentStatus.current,
-      paymentAmount.current,
-      paymentStatus.current,
-      setStatus
-    );
+    if (cashAppPayEl.current) {
+      cashAppInit(
+        amount,
+        paymentStatus.current,
+        paymentAmount.current,
+        paymentStatus.current,
+        setStatus
+      );
+    }
   }, [amount]);
 
   useEffect(() => {
@@ -90,7 +90,7 @@ const CashApp = () => {
                 Name: {guestInfo?.firstName} {guestInfo?.lastName}
               </p>
               <p className='font-semibold'>Email: {guestInfo?.email}</p>
-              <p>Phone: {guestInfo?.phone}</p>
+              <p className='font-semibold'>Phone: {guestInfo?.phone}</p>
             </div>
           </Card.Body>
         </Card>
@@ -99,13 +99,14 @@ const CashApp = () => {
             <h1 className='text-xl font-bold'>{appointments?.category}</h1>
             <Divider className='p-0 m-0' />
             <div className='px-2'>
-              <p>{appointments?.itemVariationData.name}</p>
-              <p>{appointments?.time.date}</p>
-              <p>at {appointments?.time.open}</p>
-              <p
-                className='font-bold text-2xl text-end mt-3'
-                ref={paymentAmount}
-              ></p>
+              <p className='font-semibold'>
+                {appointments?.itemVariationData.name}
+              </p>
+              <p className='font-semibold'>{appointments?.time.date}</p>
+              <p className='font-semibold'>at {appointments?.time.open}</p>
+              <p className='font-bold text-2xl text-end mt-3 p-5'>
+                Pay ${amount}
+              </p>
               <div ref={cashAppPayEl}></div>
             </div>
             <div ref={paymentStatus}></div>

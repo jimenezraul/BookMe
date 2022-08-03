@@ -1,8 +1,6 @@
 import { Button, Card, Divider } from "react-daisyui";
-import { useNavigate } from "react-router-dom";
 
 const Payments = () => {
-  const navigate = useNavigate();
   return (
     <div className='flex-1 flex flex-col justify-center items-center'>
       <div className='container mt-5 flex justify-center'>
@@ -16,7 +14,7 @@ const Payments = () => {
                 <span className='ml-2'>Credit Card</span>
               </Button>
               <Divider>or</Divider>
-              <Button onClick={()=> navigate("/cashapp-pay")} className='w-full bg-black' type='button'>
+              <Button onClick={()=> window.location.href = "/cashapp-pay"} className='w-full bg-black' type='button'>
                 <svg
                   className='h-6'
                   alt='Cash App Pay'

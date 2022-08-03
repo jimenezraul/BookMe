@@ -1,3 +1,4 @@
+import { Badge } from "react-daisyui";
 export function formatPhoneNumber(phoneNumberString, prevousValue) {
   if (phoneNumberString.length < prevousValue.length) {
     return phoneNumberString;
@@ -121,7 +122,7 @@ export function cashAppInit(
   if (amount === undefined) {
     return;
   }
-  console.log(amount);
+
   function buildPaymentRequest(payments) {
     const paymentRequest = payments.paymentRequest({
       countryCode: "US",
@@ -149,10 +150,11 @@ export function cashAppInit(
     try {
       await cashAppPay.attach(cashAppPayEl, buttonOptions);
     } catch (e) {
-      if(e.message.match('already rendered')){
+      const error_msg = e.message;
+      if (error_msg.match("already rendered")) {
         await cashAppPay.destroy();
         await cashAppPay.attach(cashAppPayEl, buttonOptions);
-    }
+      }
     }
 
     return cashAppPay;
@@ -190,8 +192,6 @@ export function cashAppInit(
   }
 
   async function Initialize() {
-    cashAppPriceDiv.innerHTML = "Pay $" + amount;
-
     if (!window.Square) {
       throw new Error("Square.js failed to load properly");
     }
@@ -207,11 +207,11 @@ export function cashAppInit(
     }
 
     let cashAppPay;
-    console.log("checking object", cashAppPay);
+
     try {
       cashAppPay = await initializeCashApp(payments);
     } catch (error) {
-      console.log("hello",error);
+      console.log("initializing CashApp", error);
     }
 
     if (cashAppPay) {
