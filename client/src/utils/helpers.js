@@ -1,4 +1,3 @@
-import { Badge } from "react-daisyui";
 export function formatPhoneNumber(phoneNumberString, prevousValue) {
   if (phoneNumberString.length < prevousValue.length) {
     return phoneNumberString;

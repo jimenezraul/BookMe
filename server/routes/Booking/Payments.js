@@ -36,7 +36,7 @@ router.post("/cashapp", async (req, res) => {
         currency: "USD",
       },
     });
-
+    console.log(response.result);
     res.send(response.result);
   } catch (error) {
     console.log(error);

@@ -1,50 +1,19 @@
 import { useEffect, useRef, useState } from "react";
-import { Card, Divider, Badge } from "react-daisyui";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  appointment,
-  setAppointment,
-} from "../app/storeSlices/appointments/appointmentSlice";
+import { Card, Divider } from "react-daisyui";
 import { idbPromise } from "../utils/helpers";
 import { useNavigate } from "react-router-dom";
 import { cashAppInit } from "../utils/helpers";
-import { guest, setGuest } from "../app/storeSlices/guest/guestSlice";
+import { useIdbPromise } from "../hooks/useIdbPromise";
 
 const CashApp = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const appointments = useSelector(appointment);
-  const guestInfo = useSelector(guest);
   const [status, setStatus] = useState(null);
   const paymentAmount = useRef();
   const cashAppPayEl = useRef();
   const paymentStatus = useRef();
 
-  useEffect(() => {
-    async function appointments() {
-      const appointLocal = await idbPromise("appointments", "get");
-      if (appointLocal.length > 0) {
-        dispatch(setAppointment(appointLocal[0]));
-        return;
-      }
-      navigate("/booknow");
-    }
-    appointments();
-  }, [dispatch, navigate]);
-
-  useEffect(() => {
-    if (!guestInfo) {
-      async function guest() {
-        const guestLocal = await idbPromise("guest", "get");
-        if (guestLocal.length > 0) {
-          dispatch(setGuest(guestLocal[0]));
-          return;
-        }
-        navigate("/booknow");
-      }
-      guest();
-    }
-  }, [dispatch, guestInfo, navigate]);
+  const { data: appointments } = useIdbPromise("appointments", "get");
+  const { data: guestInfo } = useIdbPromise("guest", "get");
 
   let amount = appointments?.price.toString();
 
@@ -64,8 +33,6 @@ const CashApp = () => {
     if (status === "success") {
       idbPromise("appointments", "delete", { ...appointments });
       idbPromise("guest", "delete", { ...guestInfo });
-      dispatch(setAppointment(null));
-      dispatch(setGuest(null));
       navigate("/profile");
       return;
     }
@@ -73,7 +40,7 @@ const CashApp = () => {
       navigate("/cashapp-error");
       return;
     }
-  }, [status, dispatch, navigate, appointments, guestInfo]);
+  }, [status, navigate, appointments, guestInfo]);
 
   return (
     <div className='flex-1 flex flex-col justify-center items-center px-2'>
