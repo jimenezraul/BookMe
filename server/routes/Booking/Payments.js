@@ -37,7 +37,7 @@ router.post("/cashapp", async (req, res) => {
       },
     });
 
-    console.log(response.result);
+    res.send(response.result);
   } catch (error) {
     console.log(error);
   }
