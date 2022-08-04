@@ -52,10 +52,10 @@ const Guest = () => {
 
   const [formData, setFormData] = useState({
     id: uuid(),
-    firstName: "",
-    lastName: "",
-    email: "",
-    phone: "",
+    givenName: "",
+    familyName: "",
+    emailAddress: "",
+    phoneNumber: "",
   });
 
   const handleValidation = (e) => {
@@ -65,11 +65,11 @@ const Guest = () => {
   };
 
   const phoneHandler = (e) => {
-    const phone = formatPhoneNumber(e.target.value, formData.phone);
+    const phone = formatPhoneNumber(e.target.value, formData.phoneNumber);
 
     setFormData({
       ...formData,
-      phone: phone,
+      phoneNumber: phone,
     });
   };
 
@@ -111,7 +111,7 @@ const Guest = () => {
             <div>
               <input
                 className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                name='firstName'
+                name='givenName'
                 onBlur={handleValidation}
                 type='text'
                 placeholder='First Name'
@@ -120,7 +120,7 @@ const Guest = () => {
             <div>
               <input
                 className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                name='lastName'
+                name='familyName'
                 onBlur={handleValidation}
                 type='text'
                 placeholder='Last Name'
@@ -129,7 +129,7 @@ const Guest = () => {
             <div>
               <input
                 className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                name='email'
+                name='emailAddress'
                 onBlur={handleValidation}
                 type='email'
                 placeholder='Email'
@@ -138,10 +138,10 @@ const Guest = () => {
             <div>
               <input
                 className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                name='phone'
+                name='phoneNumber'
                 onBlur={handleValidation}
                 onChange={(e) => phoneHandler(e)}
-                value={formData.phone}
+                value={formData.phoneNumber}
                 type='tel'
                 placeholder='Phone Number'
               />

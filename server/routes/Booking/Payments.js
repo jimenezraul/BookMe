@@ -43,4 +43,49 @@ router.post("/cashapp", async (req, res) => {
   }
 });
 
+// Credit Card Pay
+router.post("/creditcard", async (req, res) => {
+  const { service, customerId } = req.body;
+
+  if (!service) {
+    res.status(400).send("Missing service");
+    return;
+  }
+
+  try {
+    const response = await client.checkoutApi.createPaymentLink({
+      idempotencyKey: randomUUID(),
+      order: {
+        locationId: service.time.locationId,
+        customerId: customerId,
+        lineItems: [
+          {
+            name: service.category,
+            quantity: "1",
+            variationName: service.itemVariationData.name,
+            basePriceMoney: {
+              amount: service.itemVariationData.priceMoney.amount,
+              currency: "USD",
+            },
+          },
+        ],
+      },
+      checkoutOptions: {
+        allowTipping: true,
+        redirectUrl: "/checkout/success",
+        askForShippingAddress: false,
+        acceptedPaymentMethods: {
+          applePay: true,
+          googlePay: true,
+          afterpayClearpay: true,
+        },
+      },
+    });
+
+    res.send(response.result);
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 module.exports = router;

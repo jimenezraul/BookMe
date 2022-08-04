@@ -5,37 +5,57 @@ const { Auth } = require("../../utils/Auth");
 const router = require("express").Router();
 
 // Get customer by email
-router.get("/", async (req, res) => {
-  const email = req.body.email;
+router.post("/", async (req, res) => {
+  const { givenName, familyName, emailAddress, phoneNumber } = req.body;
 
-  if (!email) {
+  if (!emailAddress) {
     res.status(400).send({
       error: "Email is required",
     });
     return;
   }
-
+  let customer;
   try {
     const response = await client.customersApi.searchCustomers({
       query: {
         filter: {
           emailAddress: {
-            exact: email,
+            exact: emailAddress
           },
         },
       },
     });
-    res.send(response.result);
+    customer = response.result;
   } catch (error) {
     console.log(error);
   }
+
+  if (Object.keys(customer).length === 0) {
+    try {
+      const response = await client.customersApi.createCustomer({
+        idempotencyKey: randomUUID(),
+        givenName: givenName,
+        familyName: familyName,
+        emailAddress: emailAddress.toLowerCase(),
+        phoneNumber: `+1${phoneNumber}`,
+      });
+
+      customer = response.result.customer;
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    customer = customer.customers[0];
+  }
+
+  res.send(customer);
 });
 
 // Get booking by customer id
-router.get("/booking/:customerId",async (req, res) => {
+router.get("/booking/:customerId", async (req, res) => {
   const id = req.params.customerId;
   const location = req.body.location;
-  
+
   const now = new Date();
 
   try {

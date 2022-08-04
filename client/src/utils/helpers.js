@@ -19,22 +19,22 @@ export function formatPhoneNumber(phoneNumberString, prevousValue) {
 
 export function validation(value, type) {
   // validate first name, last name, email, phone
-  if (type === "firstName") {
+  if (type === "givenName") {
     if (value.length < 3) {
       return "First name must be at least 3 characters";
     }
   }
-  if (type === "lastName") {
+  if (type === "familyName") {
     if (value.length < 3) {
       return "Last name must be at least 3 characters";
     }
   }
-  if (type === "email") {
+  if (type === "emailAddress") {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
       return "Invalid email address";
     }
   }
-  if (type === "phone") {
+  if (type === "phoneNumber") {
     if (value.length < 14) {
       return "Phone number must be at least 10 Digits";
     }

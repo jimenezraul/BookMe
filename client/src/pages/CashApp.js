@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { setPayment } from "../app/storeSlices/payment/paymentSlice";
 
 const CashApp = () => {
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [status, setStatus] = useState(null);
@@ -32,6 +33,7 @@ const CashApp = () => {
         const guest = await idbPromise("guest", "get");
         const appointment = await idbPromise("appointments", "get");
 
+        setLoading(true);
         const paymentData = {
           data: {
             payment: payment[0],
@@ -54,6 +56,7 @@ const CashApp = () => {
         const paymentLocal = await idbPromise("payment", "get");
         dispatch(setPayment(paymentLocal[0]));
         idbPromise("payment", "delete", { ...paymentLocal[0] });
+        setLoading(false);
         navigate("/cashapp-success");
         return;
       }

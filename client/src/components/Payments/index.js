@@ -1,6 +1,52 @@
 import { Button, Card, Divider } from "react-daisyui";
+import { idbPromise } from "../../utils/helpers";
 
 const Payments = () => {
+  const url = "/api/payments/creditcard";
+
+  async function handlePayment() {
+    let service = await idbPromise("appointments", "get");
+    let client = await idbPromise("guest", "get");
+    service = service[0];
+
+    let customer;
+    try {
+      const response = await fetch("/api/customer", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...client[0] }),
+      });
+
+      if (response.ok) {
+        customer = await response.json();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    try {
+      const data = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          service: service,
+          customerId: customer.id,
+        }),
+      });
+
+      const response = await data.json();
+      console.log(response);
+      const redirectUrl = response.paymentLink.url;
+      window.location.href = redirectUrl;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div className='flex-1 flex flex-col justify-center items-center'>
       <div className='container mt-5 flex justify-center'>
@@ -9,12 +55,21 @@ const Payments = () => {
           <Card className='bg-base-300 mb-10 p-5 rounded-xl mt-2'>
             <Card.Body className='p-5'>
               <Card.Title className='pb-5'>Payment Method</Card.Title>
-              <Button className='w-full' type='button' variant='primary'>
+              <Button
+                onClick={handlePayment}
+                className='w-full'
+                type='button'
+                variant='primary'
+              >
                 <i className='fa-solid fa-credit-card'></i>{" "}
                 <span className='ml-2'>Credit Card</span>
               </Button>
               <Divider>or</Divider>
-              <Button onClick={()=> window.location.href = "/cashapp-pay"} className='w-full bg-black' type='button'>
+              <Button
+                onClick={() => (window.location.href = "/cashapp-pay")}
+                className='w-full bg-black'
+                type='button'
+              >
                 <svg
                   className='h-6'
                   alt='Cash App Pay'
