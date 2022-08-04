@@ -1,20 +1,20 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-    guest: null,
+  guest: null,
 };
 
 export const guestSlice = createSlice({
-    name: "guest",
-    initialState,
-    reducers: {
-        setGuest: (state, action) => {
-            state.guest = action.payload;
-        },
-        resetGuest: (state, action) => {
-            state.guest = null;
-        }
-    }
+  name: "guest",
+  initialState,
+  reducers: {
+    setGuest: (state, action) => {
+      state.guest = action.payload;
+    },
+    resetGuest: (state, action) => {
+      state.guest = null;
+    },
+  },
 });
 
 export const { setGuest, resetGuest } = guestSlice.actions;

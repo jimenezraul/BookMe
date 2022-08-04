@@ -4,8 +4,11 @@ import { idbPromise } from "../utils/helpers";
 import { useNavigate } from "react-router-dom";
 import { cashAppInit } from "../utils/helpers";
 import { useIdbPromise } from "../hooks/useIdbPromise";
+import { useDispatch } from "react-redux";
+import { setPayment } from "../app/storeSlices/payment/paymentSlice";
 
 const CashApp = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [status, setStatus] = useState(null);
   const cashAppPayEl = useRef();
@@ -18,26 +21,49 @@ const CashApp = () => {
 
   useEffect(() => {
     if (cashAppPayEl.current) {
-      cashAppInit(
-        amount,
-        paymentStatus.current,
-        setStatus
-      );
+      cashAppInit(amount, paymentStatus.current, setStatus);
     }
   }, [amount]);
 
   useEffect(() => {
     if (status === "success") {
-      // idbPromise("appointments", "delete", { ...appointments });
-      // idbPromise("guest", "delete", { ...guestInfo });
-      navigate("/cashapp-success");
-      return;
+      async function savePayment() {
+        const payment = await idbPromise("payment", "get");
+        const guest = await idbPromise("guest", "get");
+        const appointment = await idbPromise("appointments", "get");
+
+        const paymentData = {
+          data: {
+            payment: payment[0],
+            guest: guest[0],
+            appointment: appointment[0],
+          },
+        };
+
+        await fetch("/api/create-booking", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify(paymentData),
+        });
+
+        idbPromise("appointments", "delete", { ...appointments });
+        idbPromise("guest", "delete", { ...guestInfo });
+        const paymentLocal = await idbPromise("payment", "get");
+        dispatch(setPayment(paymentLocal[0]));
+        idbPromise("payment", "delete", { ...paymentLocal[0] });
+        navigate("/cashapp-success");
+        return;
+      }
+      savePayment();
     }
     if (status === "failure") {
       navigate("/cashapp-error");
       return;
     }
-  }, [status, navigate, appointments, guestInfo]);
+  }, [status, navigate, appointments, guestInfo, dispatch]);
 
   return (
     <div className='flex-1 flex flex-col justify-center items-center px-2'>

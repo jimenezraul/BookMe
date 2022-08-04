@@ -1,8 +1,10 @@
+const client = require("../Client");
 const router = require("express").Router();
 const { randomUUID } = require("crypto");
 
 router.post("/", async (req, res) => {
   const { data } = req.body;
+  const { payment, guest, appointment } = data;
 
   if (!data) {
     res.status(400).send({
@@ -11,27 +13,72 @@ router.post("/", async (req, res) => {
     return;
   }
 
+  let customer;
   try {
-    // const response = await client.bookingsApi.createBooking({
-    //   idempotencyKey: randomUUID(),
-    //   booking: {
-    //     startAt: "2022-07-21T14:17:10.625Z",
-    //     locationId: "L9XMGJMVQGY2D",
-    //     customerId: "QGJV5QF1VN6XBD785BRDCBHJ84",
-    //     sellerNote: "hello",
-    //     appointmentSegments: [
-    //       {
-    //         durationMinutes: 45,
-    //         serviceVariationId: "LAUV3TA7EAHEWUGDJFR7L2DX",
-    //         teamMemberId: "TMHdfpf00NyF44FX",
-    //         serviceVariationVersion: 1658425207952,
-    //       },
-    //     ],
-    //   },
-    // });
+    const response = await client.customersApi.searchCustomers({
+      query: {
+        filter: {
+          emailAddress: {
+            exact: guest.email,
+          },
+        },
+      },
+    });
+    customer = response.result;
+  } catch (error) {
+    console.log(error);
+  }
 
-    // console.log(response.result);
-    res.send(data);
+  if (Object.keys(customer).length === 0) {
+    try {
+      const response = await client.customersApi.createCustomer({
+        idempotencyKey: randomUUID(),
+        givenName: guest.firstName,
+        familyName: guest.lastName,
+        emailAddress: guest.email.toLowerCase(),
+        phoneNumber: `+1${guest.phone}`,
+      });
+
+      customer = response.result.customer;
+    } catch (error) {
+      console.log(error);
+    }
+  } else {
+    customer = customer.customers[0];
+  }
+
+  const {
+    durationMinutes,
+    serviceVariationId,
+    serviceVariationVersion,
+    teamMemberId,
+  } = appointment.time.appointmentSegments[0];
+
+  const { receiptNumber, receiptUrl, totalMoney } = payment;
+  const { startAt, locationId } = appointment.time;
+
+  try {
+    const response = await client.bookingsApi.createBooking({
+      idempotencyKey: randomUUID(),
+      booking: {
+        startAt: startAt,
+        locationId: locationId,
+        customerId: customer.id,
+        sellerNote: `Receipt Number: ${receiptNumber} Receipt Link: ${receiptUrl} Total: $${
+          totalMoney.amount / 100
+        }`,
+        appointmentSegments: [
+          {
+            durationMinutes: durationMinutes,
+            serviceVariationId: serviceVariationId,
+            teamMemberId: teamMemberId,
+            serviceVariationVersion: serviceVariationVersion,
+          },
+        ],
+      },
+    });
+
+    res.send(response.result);
   } catch (error) {
     console.log(error);
   }

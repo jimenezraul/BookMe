@@ -1,40 +1,40 @@
-import { useIdbPromise } from "../hooks/useIdbPromise";
-import { Card, Divider, Button } from "react-daisyui";
+import { Card, Divider, Button, Badge } from "react-daisyui";
 import { useNavigate } from "react-router-dom";
-import { useFetch } from "../hooks/useFetch";
+import { useSelector } from "react-redux";
+import { payment } from "../app/storeSlices/payment/paymentSlice";
+import { useState } from "react";
 
 const CashAppSuccess = () => {
+  const [count, setCount] = useState(5);
   const navigate = useNavigate();
-  const { data, loading, error } = useIdbPromise("payment", "get");
-  const { data: appointments } = useIdbPromise("appointments", "get");
-  const { data: guestInfo } = useIdbPromise("guest", "get");
+  const payments = useSelector(payment);
 
-  const userData = {
-    data: {
-      client: guestInfo,
-      appointment: appointments,
-      payment: data,
-    },
+  const redirectToBooking = () => {
+    const timer = setInterval(() => {
+      setCount(count - 1);
+    }, 1000);
+
+    if (count === 0) {
+      clearInterval(timer);
+    }
+    setTimeout(() => {
+      navigate("/booknow");
+    }, 5000);
   };
-  const { data: createBooking } = useFetch(
-    `/api/create-booking`,
-    "POST",
-    userData
-  );
 
-  console.log(createBooking);
-  if (error) {
+  if (!payments) {
+    redirectToBooking();
     return (
       <div className='flex-1 flex flex-col justify-center items-center'>
         <div className='container mt-5 flex justify-center'>
           <Card className='bg-base-300 mb-2 shadow-md'>
             <Card.Body className='w-full max-w-lg'>
               <h1 className='text-center text-2xl font-bold'>
-                Sorry something went wrong!
+                Opps! Something went wrong
               </h1>
               <Divider className='p-0 m-0' />
               <div className='px-2 mb-3'>
-                <p className='font-semibold'>Please try again later.</p>
+                <p className='font-semibold'>You will be redirected to booking page in <Badge color="primary">{count}</Badge> seconds</p>
               </div>
             </Card.Body>
           </Card>
@@ -54,19 +54,19 @@ const CashAppSuccess = () => {
                 Your CashApp payment has been successfully processed.
               </p>
               <p className='font-semibold mb-3'>
-                Confirmation number: {data?.receiptNumber}
+                Confirmation number: {payments?.receiptNumber}
               </p>
               <Divider />
               <div className='flex justify-between'>
                 <a
-                  href={data?.receiptUrl}
+                  href={payments?.receiptUrl}
                   target='_blank'
                   rel='noopener noreferrer'
                 >
                   <Button color='primary'>View Receipt</Button>
                 </a>
-                <Button color='primary' onClick={() => navigate("/profile")}>
-                  Go to Profile
+                <Button color='primary' onClick={() => navigate("/booknow")}>
+                  Back to Bookings
                 </Button>
               </div>
             </div>

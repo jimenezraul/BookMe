@@ -40,6 +40,12 @@ const Guest = () => {
           idbPromise("guest", "delete", { ...guest });
         });
       }
+      const payment = await idbPromise("payment", "get");
+      if (payment.length > 0) {
+        payment.forEach((pay) => {
+          idbPromise("payment", "delete", { ...pay });
+        });
+      }
     }
     handleGuest();
   }, []);
