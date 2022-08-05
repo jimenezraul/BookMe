@@ -19,17 +19,17 @@ export function formatPhoneNumber(phoneNumberString, prevousValue) {
 
 export function validation(value, type) {
   // validate first name, last name, email, phone
-  if (type === "givenName") {
+  if (type === "given_name") {
     if (value.length < 3) {
       return "First name must be at least 3 characters";
     }
   }
-  if (type === "familyName") {
+  if (type === "family_name") {
     if (value.length < 3) {
       return "Last name must be at least 3 characters";
     }
   }
-  if (type === "emailAddress") {
+  if (type === "email") {
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
       return "Invalid email address";
     }

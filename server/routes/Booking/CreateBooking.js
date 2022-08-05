@@ -2,24 +2,14 @@ const client = require("../Client");
 const router = require("express").Router();
 const { randomUUID } = require("crypto");
 
-router.post("/", async (req, res) => {
-  const { data } = req.body;
-  const { payment, guest, appointment } = data;
-  
-  if (!data) {
-    res.status(400).send({
-      error: "Data is required",
-    });
-    return;
-  }
-
+async function getOrCreateCustomer(user) {
   let customer;
   try {
     const response = await client.customersApi.searchCustomers({
       query: {
         filter: {
           emailAddress: {
-            exact: guest.emailAddress,
+            exact: user.email,
           },
         },
       },
@@ -29,14 +19,19 @@ router.post("/", async (req, res) => {
     console.log(error);
   }
 
+  let phone;
+  if (user.phoneNumber) {
+    phone = { phoneNumber: `+1${user.phoneNumber}` };
+  }
+
   if (Object.keys(customer).length === 0) {
     try {
       const response = await client.customersApi.createCustomer({
         idempotencyKey: randomUUID(),
-        givenName: guest.givenName,
-        familyName: guest.familyName,
-        emailAddress: guest.emailAddress.toLowerCase(),
-        phoneNumber: `+1${guest.phoneNumber}`,
+        givenName: user.given_name,
+        familyName: user.family_name,
+        emailAddress: user.email.toLowerCase(),
+        ...phone,
       });
 
       customer = response.result.customer;
@@ -46,6 +41,28 @@ router.post("/", async (req, res) => {
   } else {
     customer = customer.customers[0];
   }
+  return customer;
+}
+
+router.post("/", async (req, res) => {
+  const { data } = req.body;
+  const { payment, guest, appointment } = data;
+
+  if (!data) {
+    res.status(400).send({
+      error: "Data is required",
+    });
+    return;
+  }
+
+  let customer;
+
+  try {
+    const response = await getOrCreateCustomer(guest);
+    customer = response;
+  } catch (error) {
+    console.log(error);
+  }
 
   const {
     durationMinutes,
@@ -54,8 +71,17 @@ router.post("/", async (req, res) => {
     teamMemberId,
   } = appointment.time.appointmentSegments[0];
 
-  const { receiptNumber, receiptUrl, totalMoney } = payment;
+  const { receiptNumber, receiptUrl, totalMoney } = payment || {};
   const { startAt, locationId } = appointment.time;
+
+  // distructor payment if payment is not null
+
+  let sellerNote = "";
+  if (payment) {
+    sellerNote = `Receipt Number: ${receiptNumber} Receipt Link: ${receiptUrl} Total: $${
+      totalMoney.amount / 100
+    }`;
+  }
 
   try {
     const response = await client.bookingsApi.createBooking({
@@ -64,9 +90,7 @@ router.post("/", async (req, res) => {
         startAt: startAt,
         locationId: locationId,
         customerId: customer.id,
-        sellerNote: `Receipt Number: ${receiptNumber} Receipt Link: ${receiptUrl} Total: $${
-          totalMoney.amount / 100
-        }`,
+        sellerNote: sellerNote,
         appointmentSegments: [
           {
             durationMinutes: durationMinutes,

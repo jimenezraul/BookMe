@@ -52,9 +52,9 @@ const Guest = () => {
 
   const [formData, setFormData] = useState({
     id: uuid(),
-    givenName: "",
-    familyName: "",
-    emailAddress: "",
+    given_name: "",
+    family_name: "",
+    email: "",
     phoneNumber: "",
   });
 
@@ -111,7 +111,7 @@ const Guest = () => {
             <div>
               <input
                 className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                name='givenName'
+                name='given_name'
                 onBlur={handleValidation}
                 type='text'
                 placeholder='First Name'
@@ -120,7 +120,7 @@ const Guest = () => {
             <div>
               <input
                 className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                name='familyName'
+                name='family_name'
                 onBlur={handleValidation}
                 type='text'
                 placeholder='Last Name'
@@ -129,7 +129,7 @@ const Guest = () => {
             <div>
               <input
                 className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                name='emailAddress'
+                name='email'
                 onBlur={handleValidation}
                 type='email'
                 placeholder='Email'

@@ -14,7 +14,7 @@ const Confirm = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const data = useSelector(appointment);
-  const { isAuthenticated, loginWithPopup } = useAuth0();
+  const { isAuthenticated, loginWithPopup, user } = useAuth0();
 
   useEffect(() => {
     if (!data) {
@@ -35,6 +35,28 @@ const Confirm = () => {
     idbPromise("appointments", "delete", { ...data });
     dispatch(setAppointment({}));
     navigate("/booknow");
+  };
+
+  const handleSubmit = async () => {
+    if (isAuthenticated) {
+      const paymentData = {
+        data: {
+          guest: user,
+          appointment: data,
+        },
+      };
+
+      const response = await fetch("/api/create-booking", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(paymentData),
+      });
+
+      console.log(response);
+    }
   };
 
   return (
@@ -66,7 +88,9 @@ const Confirm = () => {
                   >
                     Cancel
                   </Button>
-                  <Button color='primary'>Confirm</Button>
+                  <Button onClick={handleSubmit} color='primary'>
+                    Confirm
+                  </Button>
                 </>
               ) : (
                 <button
