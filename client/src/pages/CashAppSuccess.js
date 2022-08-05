@@ -34,7 +34,7 @@ const CashAppSuccess = () => {
               </h1>
               <Divider className='p-0 m-0' />
               <div className='px-2 mb-3'>
-                <p className='font-semibold'>You will be redirected to booking page in <Badge color="primary">{count}</Badge> seconds</p>
+                <span className='font-semibold'>You will be redirected to booking page in <Badge color="primary">{count}</Badge> seconds</span>
               </div>
             </Card.Body>
           </Card>

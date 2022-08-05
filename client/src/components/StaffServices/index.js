@@ -15,7 +15,9 @@ const StaffServices = ({ staff }) => {
     <div className='staff-services'>
       <div className='container'>
         <div className='flex flex-wrap justify-center w-full mb-5'>
-        {loading && <progress className='progress w-56'></progress>}
+          {loading && (
+            <progress className='progress progress-primary w-56'></progress>
+          )}
           {data?.map((service, index) => (
             <div key={index} className='flex w-full md:w-1/2 p-2'>
               <div className='flex-1 card card-side bg-base-100 p- shadow-lg border border-base-300'>

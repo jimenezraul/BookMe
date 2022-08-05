@@ -1,39 +1,31 @@
-import {
-  appointment,
-  setAppointment,
-} from "../../app/storeSlices/appointments/appointmentSlice";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { idbPromise } from "../../utils/helpers";
 import { useEffect } from "react";
 import { Divider, Button } from "react-daisyui";
-
-const { useSelector, useDispatch } = require("react-redux");
+import { createBooking } from "../../api/createBooking";
+import { useState } from "react";
 
 const Confirm = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const data = useSelector(appointment);
+  const [data, setData] = useState(null);
   const { isAuthenticated, loginWithPopup, user } = useAuth0();
 
   useEffect(() => {
-    if (!data) {
-      async function handleAppointment() {
-        const appointLocal = await idbPromise("appointments", "get");
+    async function handleAppointment() {
+      const appointLocal = await idbPromise("appointments", "get");
 
-        if (appointLocal.length > 0) {
-          dispatch(setAppointment(appointLocal[0]));
-          return;
-        }
-        navigate("/booknow");
+      if (appointLocal.length > 0) {
+        setData(appointLocal[0]);
+        return;
       }
-      handleAppointment();
+      navigate("/booknow");
     }
-  }, [data, dispatch, navigate]);
+    handleAppointment();
+  }, [navigate]);
 
   const cancelHandler = () => {
     idbPromise("appointments", "delete", { ...data });
-    dispatch(setAppointment({}));
     navigate("/booknow");
   };
 
@@ -46,16 +38,16 @@ const Confirm = () => {
         },
       };
 
-      const response = await fetch("/api/create-booking", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify(paymentData),
-      });
+      try {
+        const response = await createBooking(paymentData);
 
-      console.log(response);
+        if (response.booking) {
+          idbPromise("appointments", "delete", { ...data });
+          navigate("/booking-success");
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 

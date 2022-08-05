@@ -6,9 +6,9 @@ const router = require("express").Router();
 
 // Get customer by email
 router.post("/", async (req, res) => {
-  const { givenName, familyName, emailAddress, phoneNumber } = req.body;
+  const { given_name, family_name, email, phoneNumber } = req.body;
 
-  if (!emailAddress) {
+  if (!email) {
     res.status(400).send({
       error: "Email is required",
     });
@@ -20,7 +20,7 @@ router.post("/", async (req, res) => {
       query: {
         filter: {
           emailAddress: {
-            exact: emailAddress
+            exact: email
           },
         },
       },
@@ -34,9 +34,9 @@ router.post("/", async (req, res) => {
     try {
       const response = await client.customersApi.createCustomer({
         idempotencyKey: randomUUID(),
-        givenName: givenName,
-        familyName: familyName,
-        emailAddress: emailAddress.toLowerCase(),
+        givenName: given_name,
+        familyName: family_name,
+        emailAddress: email.toLowerCase(),
         phoneNumber: `+1${phoneNumber}`,
       });
 

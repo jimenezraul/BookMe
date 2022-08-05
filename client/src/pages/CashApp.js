@@ -6,6 +6,7 @@ import { cashAppInit } from "../utils/helpers";
 import { useIdbPromise } from "../hooks/useIdbPromise";
 import { useDispatch } from "react-redux";
 import { setPayment } from "../app/storeSlices/payment/paymentSlice";
+import { createBooking } from "../api/createBooking";
 
 const CashApp = () => {
   const [loading, setLoading] = useState(false);
@@ -23,7 +24,7 @@ const CashApp = () => {
   useEffect(() => {
     if (cashAppPayEl.current) {
       cashAppInit(amount, paymentStatus.current, setStatus);
-    } 
+    }
   }, [amount]);
 
   useEffect(() => {
@@ -42,20 +43,16 @@ const CashApp = () => {
           },
         };
 
-        await fetch("/api/create-booking", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json",
-          },
-          body: JSON.stringify(paymentData),
-        });
+        try {
+          await createBooking(paymentData);
+        } catch (error) {
+          console.log(error);
+        }
 
         idbPromise("appointments", "delete", { ...appointments });
         idbPromise("guest", "delete", { ...guestInfo });
-        const paymentLocal = await idbPromise("payment", "get");
-        dispatch(setPayment(paymentLocal[0]));
-        idbPromise("payment", "delete", { ...paymentLocal[0] });
+        dispatch(setPayment(payment[0]));
+        idbPromise("payment", "delete", { ...payment[0] });
         setLoading(false);
         navigate("/cashapp-success");
         return;
@@ -79,7 +76,7 @@ const CashApp = () => {
             {loading ? (
               <div className='flex flex-col justify-center items-center'>
                 <h1>Please wait...</h1>
-                <progress className='progress w-56 my-5'></progress>
+                <progress className='progress progress-primary w-56'></progress>
               </div>
             ) : (
               <>
@@ -87,10 +84,10 @@ const CashApp = () => {
                 <Divider className='p-0 m-0' />
                 <div className='px-2 mb-3'>
                   <p className='font-semibold'>
-                    Name: {guestInfo?.firstName} {guestInfo?.lastName}
+                    Name: {guestInfo?.given_name} {guestInfo?.family_name}
                   </p>
                   <p className='font-semibold'>Email: {guestInfo?.email}</p>
-                  <p className='font-semibold'>Phone: {guestInfo?.phone}</p>
+                  <p className='font-semibold'>Phone: {guestInfo?.phoneNumber}</p>
                 </div>
               </>
             )}

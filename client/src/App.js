@@ -11,6 +11,8 @@ import BookNow from "./pages/BookNow";
 import Guest from "./pages/Guest";
 import CashApp from "./pages/CashApp";
 import CashAppSuccess from "./pages/CashAppSuccess";
+import BookingSuccess from "./pages/BookingSuccess";
+import Profile from "./pages/Profile";
 
 function App() {
   const appTheme = useSelector(theme);
@@ -27,6 +29,8 @@ function App() {
               <Route path='/guest' element={<Guest />} />
               <Route path='/cashapp-pay' element={<CashApp />} />
               <Route path='/cashapp-success' element={<CashAppSuccess />} />
+              <Route path="/booking-success" element={<BookingSuccess />} />
+              <Route path='/profile' element={<Profile />} />
             </Routes>
           </div>
           <Footer />

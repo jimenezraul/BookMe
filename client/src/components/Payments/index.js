@@ -1,9 +1,9 @@
 import { Button, Card, Divider } from "react-daisyui";
 import { idbPromise } from "../../utils/helpers";
+import { getOrCreate } from "../../api/customer";
+import { creditcardPayment } from "../../api/creditCardPayment";
 
 const Payments = () => {
-  const url = "/api/payments/creditcard";
-
   async function handlePayment() {
     let service = await idbPromise("appointments", "get");
     let client = await idbPromise("guest", "get");
@@ -11,35 +11,15 @@ const Payments = () => {
 
     let customer;
     try {
-      const response = await fetch("/api/customer", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ ...client[0] }),
-      });
-
-      if (response.ok) {
-        customer = await response.json();
-      }
+      const response = await getOrCreate(client);
+      customer = response;
     } catch (error) {
       console.log(error);
     }
 
     try {
-      const data = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          service: service,
-          customerId: customer.id,
-        }),
-      });
+      const response = await creditcardPayment(service, customer);
 
-      const response = await data.json();
-      console.log(response);
       const redirectUrl = response.paymentLink.url;
       window.location.href = redirectUrl;
     } catch (error) {

@@ -18,7 +18,7 @@ const Staff = () => {
 
   return (
     <div className='flex flex-wrap justify-center w-full mb-5'>
-      {loading && <progress className='progress w-56'></progress>}
+      {loading && <progress className='progress progress-primary w-56'></progress>}
 
       {staff?.map((staff, index) => (
         <div key={index} className='flex w-full md:w-1/2 p-2'>
