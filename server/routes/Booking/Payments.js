@@ -46,6 +46,7 @@ router.post("/cashapp", async (req, res) => {
 // Credit Card Pay
 router.post("/creditcard", async (req, res) => {
   const { service, customerId } = req.body;
+  const url = new URL(context.headers.referer).origin;
 
   if (!service) {
     res.status(400).send("Missing service");
@@ -72,7 +73,7 @@ router.post("/creditcard", async (req, res) => {
       },
       checkoutOptions: {
         allowTipping: true,
-        redirectUrl: "/checkout/success",
+        redirectUrl: `${url}/payment/success`,
         askForShippingAddress: false,
         acceptedPaymentMethods: {
           applePay: true,

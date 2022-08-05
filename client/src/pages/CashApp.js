@@ -23,17 +23,17 @@ const CashApp = () => {
   useEffect(() => {
     if (cashAppPayEl.current) {
       cashAppInit(amount, paymentStatus.current, setStatus);
-    }
+    } 
   }, [amount]);
 
   useEffect(() => {
     if (status === "success") {
+      setLoading(true);
       async function savePayment() {
         const payment = await idbPromise("payment", "get");
         const guest = await idbPromise("guest", "get");
         const appointment = await idbPromise("appointments", "get");
 
-        setLoading(true);
         const paymentData = {
           data: {
             payment: payment[0],
@@ -76,35 +76,46 @@ const CashApp = () => {
         </h1>
         <Card className='bg-base-300 mb-2 shadow-md'>
           <Card.Body className='w-full max-w-md'>
-            <h1 className='text-xl font-bold'>Customer info</h1>
-            <Divider className='p-0 m-0' />
-            <div className='px-2 mb-3'>
-              <p className='font-semibold'>
-                Name: {guestInfo?.firstName} {guestInfo?.lastName}
-              </p>
-              <p className='font-semibold'>Email: {guestInfo?.email}</p>
-              <p className='font-semibold'>Phone: {guestInfo?.phone}</p>
-            </div>
+            {loading ? (
+              <div className='flex flex-col justify-center items-center'>
+                <h1>Please wait...</h1>
+                <progress className='progress w-56 my-5'></progress>
+              </div>
+            ) : (
+              <>
+                <h1 className='text-xl font-bold'>Customer info</h1>
+                <Divider className='p-0 m-0' />
+                <div className='px-2 mb-3'>
+                  <p className='font-semibold'>
+                    Name: {guestInfo?.firstName} {guestInfo?.lastName}
+                  </p>
+                  <p className='font-semibold'>Email: {guestInfo?.email}</p>
+                  <p className='font-semibold'>Phone: {guestInfo?.phone}</p>
+                </div>
+              </>
+            )}
           </Card.Body>
         </Card>
-        <Card className='bg-base-300 shadow-md mb-5'>
-          <Card.Body className='w-full max-w-md'>
-            <h1 className='text-xl font-bold'>{appointments?.category}</h1>
-            <Divider className='p-0 m-0' />
-            <div className='px-2'>
-              <p className='font-semibold'>
-                {appointments?.itemVariationData.name}
-              </p>
-              <p className='font-semibold'>{appointments?.time.date}</p>
-              <p className='font-semibold'>at {appointments?.time.open}</p>
-              <p className='font-bold text-2xl text-end mt-3 p-5'>
-                Pay ${amount}
-              </p>
-              <div ref={cashAppPayEl}></div>
-            </div>
-            <div ref={paymentStatus}></div>
-          </Card.Body>
-        </Card>
+        {!loading && (
+          <Card className='bg-base-300 shadow-md mb-5'>
+            <Card.Body className='w-full max-w-md'>
+              <h1 className='text-xl font-bold'>{appointments?.category}</h1>
+              <Divider className='p-0 m-0' />
+              <div className='px-2'>
+                <p className='font-semibold'>
+                  {appointments?.itemVariationData.name}
+                </p>
+                <p className='font-semibold'>{appointments?.time.date}</p>
+                <p className='font-semibold'>at {appointments?.time.open}</p>
+                <p className='font-bold text-2xl text-end mt-3 p-5'>
+                  Pay ${amount}
+                </p>
+                <div ref={cashAppPayEl}></div>
+              </div>
+              <div ref={paymentStatus}></div>
+            </Card.Body>
+          </Card>
+        )}
       </div>
     </div>
   );

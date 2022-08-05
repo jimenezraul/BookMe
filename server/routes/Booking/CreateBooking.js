@@ -5,7 +5,7 @@ const { randomUUID } = require("crypto");
 router.post("/", async (req, res) => {
   const { data } = req.body;
   const { payment, guest, appointment } = data;
-
+  
   if (!data) {
     res.status(400).send({
       error: "Data is required",
@@ -19,7 +19,7 @@ router.post("/", async (req, res) => {
       query: {
         filter: {
           emailAddress: {
-            exact: guest.email,
+            exact: guest.emailAddress,
           },
         },
       },
@@ -33,10 +33,10 @@ router.post("/", async (req, res) => {
     try {
       const response = await client.customersApi.createCustomer({
         idempotencyKey: randomUUID(),
-        givenName: guest.firstName,
-        familyName: guest.lastName,
-        emailAddress: guest.email.toLowerCase(),
-        phoneNumber: `+1${guest.phone}`,
+        givenName: guest.givenName,
+        familyName: guest.familyName,
+        emailAddress: guest.emailAddress.toLowerCase(),
+        phoneNumber: `+1${guest.phoneNumber}`,
       });
 
       customer = response.result.customer;

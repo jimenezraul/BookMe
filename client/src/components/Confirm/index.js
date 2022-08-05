@@ -66,10 +66,7 @@ const Confirm = () => {
                   >
                     Cancel
                   </Button>
-
-                  <Link to=''>
-                    <Button color='primary'>Confirm</Button>
-                  </Link>
+                  <Button color='primary'>Confirm</Button>
                 </>
               ) : (
                 <button
