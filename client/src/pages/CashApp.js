@@ -26,7 +26,7 @@ const CashApp = () => {
       cashAppInit(amount, paymentStatus.current, setStatus);
     }
   }, [amount]);
-
+  
   useEffect(() => {
     if (status === "success") {
       setLoading(true);
@@ -75,8 +75,8 @@ const CashApp = () => {
           <Card.Body className='w-full max-w-md'>
             {loading ? (
               <div className='flex flex-col justify-center items-center'>
-                <h1>Please wait...</h1>
-                <progress className='progress progress-primary w-56'></progress>
+                <h1 className="text-lg">Please wait...</h1>
+                <progress className='mt-5 progress progress-primary w-56'></progress>
               </div>
             ) : (
               <>
@@ -87,7 +87,9 @@ const CashApp = () => {
                     Name: {guestInfo?.given_name} {guestInfo?.family_name}
                   </p>
                   <p className='font-semibold'>Email: {guestInfo?.email}</p>
-                  <p className='font-semibold'>Phone: {guestInfo?.phoneNumber}</p>
+                  <p className='font-semibold'>
+                    Phone: {guestInfo?.phoneNumber}
+                  </p>
                 </div>
               </>
             )}

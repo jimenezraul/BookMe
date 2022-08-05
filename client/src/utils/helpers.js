@@ -113,7 +113,7 @@ export function cashAppInit(amount, cashAppPayEl, setStatus) {
   const appId = "sandbox-sq0idb-uc1hM_aoBdq14A5bJynh9Q";
   const locationId = "L9XMGJMVQGY2D";
 
-  if (amount === undefined) {
+  if (!amount) {
     return;
   }
 

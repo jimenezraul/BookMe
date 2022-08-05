@@ -47,10 +47,10 @@ const CashAppSuccess = () => {
       <div className='container mt-10 flex justify-center'>
         <Card className='bg-base-300 mb-2 shadow-md'>
           <Card.Body className='w-full max-w-lg'>
-            <h1 className='text-center text-2xl font-bold'>Thank you!</h1>
+            <h1 className='text-center text-3xl font-bold'>Thank you!</h1>
             <Divider className='p-0 m-0' />
             <div className='px-2'>
-              <p className='font-semibold mb-3'>
+              <p className='font-semibold mb-3 text-xl'>
                 Your CashApp payment has been successfully processed.
               </p>
               <p className='font-semibold mb-3'>
