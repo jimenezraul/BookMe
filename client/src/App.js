@@ -20,7 +20,7 @@ function App() {
   return (
     <Theme dataTheme={appTheme}>
       <Router>
-        <div className='min-h-screen flex flex-col justify-between'>
+        <div className='min-h-screen flex flex-col justify-between overflow-x-hidden'>
           <Navbar />
           <div className='flex-1'>
             <Routes>

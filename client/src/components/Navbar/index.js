@@ -101,7 +101,7 @@ const AppNavbar = () => {
             <div
               onToggle={() => setIsOpen(!isOpen)}
               className={`${
-                isOpen ? "opacity-100 -translate-y-0" : "opacity-0 -translate-y-96"
+                isOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-96"
               } absolute top-16 transition-all duration-200`}
             >
               <ul
@@ -156,7 +156,7 @@ const AppNavbar = () => {
             </Button>
             <div
               className={`absolute right-0 top-14 z-50 ${
-                isProfileOpen ? "opacity-100 -translate-y-0" : "opacity-0 -translate-y-96"
+                isProfileOpen ? "opacity-100 -translate-x-0" : "opacity-0 translate-x-96"
               } transition-all duration-400`}
             >
               <Dropdown.Menu
