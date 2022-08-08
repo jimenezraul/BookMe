@@ -20,7 +20,7 @@ router.post("/", async (req, res) => {
       query: {
         filter: {
           emailAddress: {
-            exact: email
+            exact: email,
           },
         },
       },
@@ -67,6 +67,15 @@ router.get("/booking/:customerId", async (req, res) => {
       now.toISOString()
     );
 
+    let categories;
+    try {
+      const response = await client.catalogApi.listCatalog();
+
+      categories = response.result.objects;
+    } catch (error) {
+      console.log(error);
+    }
+
     // Customer's booking
     const booking = response.result.bookings.filter(
       (booking) => booking.customerId === id && booking.status === "ACCEPTED"
@@ -78,7 +87,6 @@ router.get("/booking/:customerId", async (req, res) => {
     });
 
     services = services.result.items;
-
     // Customer's booking services
     const data = booking.map((b) => {
       const start = new Date(b.startAt);
@@ -94,6 +102,20 @@ router.get("/booking/:customerId", async (req, res) => {
           });
         })
         .flat();
+
+      // get service category
+      // const serviceCategory = categories.filter(
+      //   (category) =>
+      //     category.id === filteredData[0].itemData.categoryId
+      // );
+      filteredData.forEach((item) => {
+        item.category = categories.filter((category) => {
+          return category.itemData?.variations?.some(
+            (variation) => variation.itemVariationData.itemId === item.itemVariationData.itemId
+          );
+        })[0].itemData.name
+      });
+
       return {
         ...b,
         appointments: filteredData,
