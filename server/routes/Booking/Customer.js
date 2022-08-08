@@ -57,14 +57,16 @@ router.get("/booking/:customerId", async (req, res) => {
   const location = req.body.location;
 
   const now = new Date();
+  const monthFromNow = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
   try {
     const response = await client.bookingsApi.listBookings(
-      20,
+      200,
       "",
       "",
       location,
-      now.toISOString()
+      now.toISOString(),
+      monthFromNow.toISOString(),
     );
 
     let categories;
@@ -80,7 +82,7 @@ router.get("/booking/:customerId", async (req, res) => {
     const booking = response.result.bookings.filter(
       (booking) => booking.customerId === id && booking.status === "ACCEPTED"
     );
-
+   
     // All services
     let services = await client.catalogApi.searchCatalogItems({
       productTypes: ["APPOINTMENTS_SERVICE"],
@@ -103,11 +105,6 @@ router.get("/booking/:customerId", async (req, res) => {
         })
         .flat();
 
-      // get service category
-      // const serviceCategory = categories.filter(
-      //   (category) =>
-      //     category.id === filteredData[0].itemData.categoryId
-      // );
       filteredData.forEach((item) => {
         item.category = categories.filter((category) => {
           return category.itemData?.variations?.some(
@@ -115,7 +112,7 @@ router.get("/booking/:customerId", async (req, res) => {
           );
         })[0].itemData.name
       });
-
+      
       return {
         ...b,
         appointments: filteredData,
