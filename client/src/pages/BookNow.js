@@ -41,11 +41,11 @@ const BookNow = () => {
   }
 
   return (
-    <div className='flex-1 flex flex-col justify-center items-center'>
-      <div className='container'>
+    <div className='flex-1'>
+      <div className='container mx-auto'>
         <HeroSection title='Appointments' />
       </div>
-      <div className='p-3 w-full container'>
+      <div className='p-3 w-full container mx-auto'>
         <div className='pt-3 flex justify-center'>
           <Steps>
             <Steps.Step color='primary'>Staff</Steps.Step>

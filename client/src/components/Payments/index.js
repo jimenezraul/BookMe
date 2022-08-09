@@ -2,13 +2,15 @@ import { Button, Card, Divider } from "react-daisyui";
 import { idbPromise } from "../../utils/helpers";
 import { getOrCreate } from "../../api/customer";
 import { creditcardPayment } from "../../api/creditCardPayment";
+import { useState } from "react";
 
 const Payments = () => {
+  const [loading, setLoading] = useState(false);
   async function handlePayment() {
     let service = await idbPromise("appointments", "get");
     let client = await idbPromise("guest", "get");
     service = service[0];
-
+    setLoading(true);
     let customer;
     try {
       const response = await getOrCreate(client);
@@ -21,6 +23,7 @@ const Payments = () => {
       const response = await creditcardPayment(service, customer);
 
       const redirectUrl = response.paymentLink.url;
+      setLoading(false);
       window.location.href = redirectUrl;
     } catch (error) {
       console.log(error);
@@ -40,6 +43,7 @@ const Payments = () => {
                 className='w-full'
                 type='button'
                 variant='primary'
+                loading={loading}
               >
                 <i className='fa-solid fa-credit-card'></i>{" "}
                 <span className='ml-2'>Credit Card</span>

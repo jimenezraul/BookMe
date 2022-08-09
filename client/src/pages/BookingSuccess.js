@@ -26,11 +26,13 @@ const BookingSuccess = () => {
         <Card className='bg-base-300 mb-2 shadow-md'>
           <Card.Body className='w-full max-w-lg'>
             <h1 className='text-3xl font-bold text-center'>Thank You!</h1>
-            <p className='text-xl'>Your Appointment has been booked successfully.</p>
-            <p>
+            <p className='text-xl'>
+              Your Appointment has been booked successfully.
+            </p>
+            <span>
               You will be redirected to your profile page in{" "}
               <Badge color='primary'>{count}</Badge> seconds.
-            </p>
+            </span>
           </Card.Body>
         </Card>
       </div>

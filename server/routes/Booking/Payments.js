@@ -24,7 +24,7 @@ router.get("/:id", async (req, res) => {
 
 // CashApp Pay
 router.post("/cashapp", async (req, res) => {
-  const { sourceId, amount, bookId } = req.body;
+  const { sourceId, amount} = req.body;
   const amountInCents = Math.round(parseFloat(amount) * 100);
 
   try {
@@ -39,7 +39,7 @@ router.post("/cashapp", async (req, res) => {
 
     res.send(response.result);
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
   }
 });
 

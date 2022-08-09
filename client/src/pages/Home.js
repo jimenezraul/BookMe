@@ -24,8 +24,8 @@ const Services = [
 
 const Home = () => {
   return (
-    <div className='flex-1 flex flex-col justify-center items-center'>
-      <div className='container'>
+    <div className='flex-1'>
+      <div className='container mx-auto'>
         <HeroSection
           title='NextLevel Studio'
           subtitle='A Unisex Salon in the heart of the city.'
