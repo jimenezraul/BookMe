@@ -23,12 +23,12 @@ const Services = () => {
     <div className='flex w-full justify-center mt-10'>
       <div className='container mx-auto'>
         <div className='flex flex-col justify-center items-center'>
-          <h1 className='text-3xl font-bold text-center'>Services</h1>
+          <h1 className='text-3xl font-bold text-center'>Our Services</h1>
         </div>
         <div className='flex mt-6 justify-center mb-16'>
           <div className='w-16 h-1 rounded-full bg-blue-500 inline-flex'></div>
         </div>
-        <div className='flex flex-wrap'>
+        <div className='flex flex-col items-center'>
           {data?.map((service) => (
             <div key={service.id} className='w-full md:w-1/2 lg:w-4/12 p-2'>
               <Card className='bg-base-300'>

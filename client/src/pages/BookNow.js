@@ -26,7 +26,13 @@ const BookNow = () => {
   }
 
   if (services && !date) {
-    calendar = <BookCalendar staff={staff} service={services} />;
+    calendar = (
+      <div className='flex justify-center'>
+        <div className='w-full md:w-3/4 lg:w-1/2'>
+          <BookCalendar staff={staff} service={services} />
+        </div>
+      </div>
+    );
   }
 
   if (date && !time) {
@@ -42,10 +48,10 @@ const BookNow = () => {
   return (
     <div className='flex-1'>
       <div className='container mx-auto'>
-        <h1 className="text-center my-10 text-3xl font-bold">Appointments</h1>
+        <h1 className='text-center my-10 text-3xl font-bold'>Appointments</h1>
       </div>
       <div className='p-3 w-full container mx-auto'>
-        <Divider className="m-0 p-0"></Divider>
+        <Divider className='m-0 p-0'></Divider>
         <div className='pt-3 flex justify-center mb-4 md:m-0'>
           <Steps>
             <Steps.Step color='primary'>Staff</Steps.Step>
@@ -56,7 +62,11 @@ const BookNow = () => {
           </Steps>
         </div>
         {staff && (
-          <Button className="mb-2" onClick={() => navigate(-1)} variant='outline'>
+          <Button
+            className='mb-2'
+            onClick={() => navigate(-1)}
+            variant='outline'
+          >
             Back
           </Button>
         )}
