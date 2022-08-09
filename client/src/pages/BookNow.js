@@ -1,4 +1,3 @@
-import HeroSection from "../components/Hero";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import Staff from "../components/Staff";
 import { Divider, Button, Steps } from "react-daisyui";
@@ -43,10 +42,11 @@ const BookNow = () => {
   return (
     <div className='flex-1'>
       <div className='container mx-auto'>
-        <HeroSection title='Appointments' />
+        <h1 className="text-center my-10 text-3xl font-bold">Appointments</h1>
       </div>
       <div className='p-3 w-full container mx-auto'>
-        <div className='pt-3 flex justify-center'>
+        <Divider className="m-0 p-0"></Divider>
+        <div className='pt-3 flex justify-center mb-4 md:m-0'>
           <Steps>
             <Steps.Step color='primary'>Staff</Steps.Step>
             <Steps.Step color={`${staff && "primary"}`}>Service</Steps.Step>
@@ -55,7 +55,6 @@ const BookNow = () => {
             <Steps.Step color={`${time && "primary"}`}>Confirm</Steps.Step>
           </Steps>
         </div>
-        <Divider></Divider>
         {staff && (
           <Button onClick={() => navigate(-1)} variant='outline'>
             Back

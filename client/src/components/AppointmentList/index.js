@@ -31,7 +31,8 @@ const AppointmentList = ({ appointment, onDelete, isLast }) => {
         <Button
           onClick={handleDelete}
           className='text-white border-0 bg-red-600 hover:bg-red-800'
-          loading={loading}
+                  loading={loading}
+                  disabled={loading}
         >
           Cancel
         </Button>

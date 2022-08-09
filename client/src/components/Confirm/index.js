@@ -86,6 +86,7 @@ const Confirm = () => {
                     onClick={handleSubmit}
                     color='primary'
                     loading={loading}
+                    disabled={loading}
                   >
                     Confirm
                   </Button>
