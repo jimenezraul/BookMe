@@ -1,5 +1,5 @@
 import HeroSection from "../components/Hero";
-import { Button } from "react-daisyui";
+import { Button,Input } from "react-daisyui";
 import { useState, useEffect } from "react";
 import { validation, formatPhoneNumber } from "../utils/helpers";
 import { useDispatch, useSelector } from "react-redux";
@@ -109,17 +109,11 @@ const Guest = () => {
           >
             <h1 className='text-2xl font-bold mb-2'>Guest Info</h1>
             <div>
-              <input
-                className='bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
-                name='given_name'
-                onBlur={handleValidation}
-                type='text'
-                placeholder='First Name'
-              />
+              <Input className="w-full" name="given_name" onBlur={handleValidation} placeholder='First Name'/>
             </div>
             <div>
-              <input
-                className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+              <Input
+                className='w-full'
                 name='family_name'
                 onBlur={handleValidation}
                 type='text'
@@ -127,8 +121,8 @@ const Guest = () => {
               />
             </div>
             <div>
-              <input
-                className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+              <Input
+                className='w-full'
                 name='email'
                 onBlur={handleValidation}
                 type='email'
@@ -136,8 +130,8 @@ const Guest = () => {
               />
             </div>
             <div>
-              <input
-                className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline'
+              <Input
+                className='w-full'
                 name='phoneNumber'
                 onBlur={handleValidation}
                 onChange={(e) => phoneHandler(e)}
