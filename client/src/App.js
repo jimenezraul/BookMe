@@ -22,7 +22,7 @@ function App() {
       <Router>
         <div className='min-h-screen flex flex-col justify-between overflow-x-hidden'>
           <Navbar />
-          <div className='flex-1'>
+          <div className='flex-1 flex flex-col'>
             <Routes>
               <Route path='/' element={<Home />} />
               <Route path='/booknow' element={<BookNow />} />

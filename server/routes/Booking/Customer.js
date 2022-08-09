@@ -57,7 +57,6 @@ router.get("/booking/:customerId", async (req, res) => {
   const location = req.body.location;
 
   const now = new Date();
-  const monthFromNow = new Date(now.getFullYear(), now.getMonth() + 1, 0);
 
   try {
     const response = await client.bookingsApi.listBookings(
@@ -65,8 +64,7 @@ router.get("/booking/:customerId", async (req, res) => {
       "",
       "",
       location,
-      now.toISOString(),
-      monthFromNow.toISOString(),
+      now.toISOString()
     );
 
     let categories;

@@ -131,11 +131,6 @@ const AppNavbar = () => {
             </div>
           </div>
         </Navbar.Start>
-        <Navbar.Center>
-          <Button color='ghost' className='normal-case text-xl'>
-            Salon - BarberShop
-          </Button>
-        </Navbar.Center>
         <Navbar.End className='navbar-end relative'>
           <div className='flex-none gap-2' ref={profileRef}>
             <Button

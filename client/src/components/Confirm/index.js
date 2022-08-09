@@ -9,6 +9,7 @@ import { useState } from "react";
 const Confirm = () => {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
   const { isAuthenticated, loginWithPopup, user } = useAuth0();
 
   useEffect(() => {
@@ -31,6 +32,7 @@ const Confirm = () => {
 
   const handleSubmit = async () => {
     if (isAuthenticated) {
+      setLoading(true);
       const paymentData = {
         data: {
           guest: user,
@@ -80,7 +82,11 @@ const Confirm = () => {
                   >
                     Cancel
                   </Button>
-                  <Button onClick={handleSubmit} color='primary'>
+                  <Button
+                    onClick={handleSubmit}
+                    color='primary'
+                    loading={loading}
+                  >
                     Confirm
                   </Button>
                 </>
