@@ -22,14 +22,14 @@ const Staff = () => {
   }
 
   return (
-    <div className='flex flex-wrap justify-center w-full mb-5'>
+    <div className='flex flex-wrap justify-center w-full mb-5 mt-5'>
       {loading && (
         <progress className='progress progress-primary w-56'></progress>
       )}
 
       {staff?.map((staff, index) => (
         <div key={index} className='flex w-full md:w-1/2 p-2'>
-          <div className='flex-1 card card-side bg-base-100 p- shadow-lg p-2 border border-base-300'>
+          <div className='flex-1 card card-side bg-base-300 p- shadow-lg p-2 border border-base-300'>
             <div className='pl-3 avatar flex flex-col justify-center'>
               <div className='w-24 h-24 mask mask-squircle'>
                 <img

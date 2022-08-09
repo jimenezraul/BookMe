@@ -56,7 +56,7 @@ const Confirm = () => {
   return (
     <div className='flex flex-wrap justify-center w-full mb-5'>
       <div className='flex w-full md:w-1/2'>
-        <div className='flex-1 card card-side bg-base-100 p- shadow-lg p-2 border border-base-300'>
+        <div className='flex-1 card card-side bg-base-300 p- shadow-lg p-2 border border-base-300'>
           <div className='card-body'>
             <h2 className='card-title'>{data?.category}</h2>
             <Divider className='p-0 m-0' />

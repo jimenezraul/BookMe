@@ -56,7 +56,7 @@ const BookNow = () => {
           </Steps>
         </div>
         {staff && (
-          <Button onClick={() => navigate(-1)} variant='outline'>
+          <Button className="mb-2" onClick={() => navigate(-1)} variant='outline'>
             Back
           </Button>
         )}

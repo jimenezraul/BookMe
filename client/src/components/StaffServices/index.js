@@ -14,15 +14,15 @@ const StaffServices = ({ staff }) => {
   return (
     <div className='staff-services'>
       <div className='container'>
-        <div className='flex flex-wrap justify-center w-full mb-5'>
+        <div className='flex flex-wrap w-full mb-5'>
           {loading && (
             <progress className='progress progress-primary w-56'></progress>
           )}
           {data?.map((service, index) => (
-            <div key={index} className='flex w-full md:w-1/2 p-2'>
-              <div className='flex-1 card card-side bg-base-100 p- shadow-lg border border-base-300'>
+            <div key={index} className='w-full md:w-1/2 p-1'>
+              <div className='flex-1 card card-side bg-base-300 shadow-lg border border-base-300'>
                 <div className='card-body'>
-                  <h2 className='card-title'>{service.itemData.name}</h2>
+                  <h2 className='text-center text-2xl font-bold'>{service.itemData.name}</h2>
                   <Divider></Divider>
                   {service.itemData.variations.map((variation, index) => {
                     let price =

@@ -18,7 +18,7 @@ const Location = () => {
 
   return (
     <div className='flex flex-wrap justify-center'>
-      {loading && <progress className='progress w-56'></progress>}
+      {loading && <progress className='progress w-56 my-10'></progress>}
       {data?.map((location, index) => {
         return (
           <div

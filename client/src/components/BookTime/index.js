@@ -54,11 +54,11 @@ const BookTime = ({ staff, services, date }) => {
   return (
     <div className='staff-services'>
       <div className='container'>
-        <div className='flex flex-wrap justify-center w-full mb-5'>
+        <div className='flex flex-wrap w-full mb-5'>
           {loading && <progress className='progress progress-primary w-56'></progress>}
           {data?.map((time, index) => (
             <div key={index} className='flex w-1/2 md:w-4/12 lg:w-3/12 p-2'>
-              <div className='flex-1 card card-side bg-base-100 p- shadow-lg border border-base-300'>
+              <div className='flex-1 card card-side bg-base-300 p- shadow-lg border border-base-300'>
                 <div className='card-body'>
                   <h2 className='card-title'>{time.open}</h2>
                   <Button
