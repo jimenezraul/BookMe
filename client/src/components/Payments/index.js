@@ -1,6 +1,35 @@
 import { Button, Card, Divider } from "react-daisyui";
+import { idbPromise } from "../../utils/helpers";
+import { getOrCreate } from "../../api/customer";
+import { creditcardPayment } from "../../api/creditCardPayment";
+import { useState } from "react";
 
 const Payments = () => {
+  const [loading, setLoading] = useState(false);
+  async function handlePayment() {
+    let service = await idbPromise("appointments", "get");
+    let client = await idbPromise("guest", "get");
+    service = service[0];
+    setLoading(true);
+    let customer;
+    try {
+      const response = await getOrCreate(client);
+      customer = response;
+    } catch (error) {
+      console.log(error);
+    }
+
+    try {
+      const response = await creditcardPayment(service, customer);
+
+      const redirectUrl = response.paymentLink.url;
+      setLoading(false);
+      window.location.href = redirectUrl;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
     <div className='flex-1 flex flex-col justify-center items-center'>
       <div className='container mt-5 flex justify-center'>
@@ -9,12 +38,22 @@ const Payments = () => {
           <Card className='bg-base-300 mb-10 p-5 rounded-xl mt-2'>
             <Card.Body className='p-5'>
               <Card.Title className='pb-5'>Payment Method</Card.Title>
-              <Button className='w-full' type='button' variant='primary'>
+              <Button
+                onClick={handlePayment}
+                className='w-full'
+                type='button'
+                variant='primary'
+                loading={loading}
+              >
                 <i className='fa-solid fa-credit-card'></i>{" "}
                 <span className='ml-2'>Credit Card</span>
               </Button>
               <Divider>or</Divider>
-              <Button onClick={()=> window.location.href = "/cashapp-pay"} className='w-full bg-black' type='button'>
+              <Button
+                onClick={() => (window.location.href = "/cashapp-pay")}
+                className='w-full bg-black'
+                type='button'
+              >
                 <svg
                   className='h-6'
                   alt='Cash App Pay'
