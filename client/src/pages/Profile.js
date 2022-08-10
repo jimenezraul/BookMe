@@ -1,4 +1,4 @@
-import { Divider, Card} from "react-daisyui";
+import { Divider, Card } from "react-daisyui";
 import { useAuth0 } from "@auth0/auth0-react";
 import { useEffect } from "react";
 import { useState } from "react";
@@ -7,10 +7,13 @@ import { getOrCreate } from "../api/customer";
 import Login from "../components/Login";
 import { deleteBooking } from "../api/deleteBooking";
 import AppointmentList from "../components/AppointmentList";
+import { useSelector, useDispatch } from "react-redux";
+import { booking, setBooking } from "../app/storeSlices/booking/bookingSlice";
 
 const Profile = () => {
+  const dispatch = useDispatch();
   const [bookingLoading, setBookingLoading] = useState(false);
-  const [appointments, setAppointments] = useState([]);
+  const appointments = useSelector(booking);
   const { user, isAuthenticated } = useAuth0();
 
   useEffect(() => {
@@ -19,12 +22,12 @@ const Profile = () => {
       async function fetchData() {
         const data = await getOrCreate([user]);
         const booking = await getBooking(data.id);
-        setAppointments(booking);
+        dispatch(setBooking(booking));
         setBookingLoading(false);
       }
       fetchData();
     }
-  }, [isAuthenticated, user]);
+  }, [isAuthenticated, user, dispatch]);
 
   if (!isAuthenticated) {
     return <Login />;
@@ -33,7 +36,9 @@ const Profile = () => {
   async function handleDelete(id) {
     const response = await deleteBooking(id);
     if (response) {
-      setAppointments(appointments.filter((appointment) => appointment.id !== id));
+      dispatch(
+        setBooking(appointments.filter((appointment) => appointment.id !== id))
+      );
     }
   }
 
@@ -70,7 +75,14 @@ const Profile = () => {
                 ) : appointments.length > 0 ? (
                   appointments.map((appointment, index) => {
                     const isLast = index === appointments.length - 1;
-                    return <AppointmentList key={index} appointment={appointment} isLast={isLast} onDelete={handleDelete} />
+                    return (
+                      <AppointmentList
+                        key={index}
+                        appointment={appointment}
+                        isLast={isLast}
+                        onDelete={handleDelete}
+                      />
+                    );
                   })
                 ) : (
                   <div className='flex flex-wrap justify-center w-full mb-5'>

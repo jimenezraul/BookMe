@@ -1,4 +1,4 @@
-import { Button, Divider, Modal } from "react-daisyui";
+import { Button, Divider } from "react-daisyui";
 import { useState } from "react";
 import RescheduleModal from "../RescheduleModal";
 

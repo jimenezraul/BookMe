@@ -4,34 +4,58 @@ import { idbPromise } from "../../utils/helpers";
 import { useEffect } from "react";
 import { Divider, Button } from "react-daisyui";
 import { useState } from "react";
+import { updateBooking } from "../../api/updateBooking";
+import { useSelector, useDispatch } from "react-redux";
+import {
+  updateBookings,
+  booking,
+} from "../../app/storeSlices/booking/bookingSlice";
 
-const Update = () => {
+const Update = ({ onClose }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const { isAuthenticated } = useAuth0();
-
+  const bookings = useSelector(booking);
+  console.log(bookings);
   useEffect(() => {
     async function handleAppointment() {
       const appointLocal = await idbPromise("appointments", "get");
-
       if (appointLocal.length > 0) {
         setData(appointLocal[0]);
         return;
       }
-      navigate("/booknow");
     }
     handleAppointment();
-  }, [navigate]);
+  }, []);
 
   const handleSubmit = async () => {
     setLoading(true);
     const paymentData = {
-      data: {
-        appointment: data,
-      },
+      data: data,
     };
-    console.log(paymentData);
+    const response = await updateBooking(paymentData);
+    if (response.booking) {
+      dispatch(
+        updateBookings({
+          ...data,
+          appointmentDate: data.time.date,
+          appointmentTime: data.time.open,
+          startAt: data.time.startAt,
+        })
+      );
+     
+      // delete appointment from local storage
+      const appointLocal = await idbPromise("appointments", "get");
+      if (appointLocal.length > 0) {
+        appointLocal.forEach((appoint) => {
+          idbPromise("appointments", "delete", { ...appoint });
+        });
+      }
+      onClose();
+      navigate("/profile");
+    }
   };
   const price =
     data?.appointments[0]?.itemVariationData?.priceMoney?.amount / 100;

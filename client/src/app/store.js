@@ -4,6 +4,7 @@ import themeReducer from "./storeSlices/theme/themeSlice";
 import appointmentReducer from "./storeSlices/appointments/appointmentSlice";
 import guestReducer from "./storeSlices/guest/guestSlice";
 import paymentReducer from "./storeSlices/payment/paymentSlice";
+import bookingReducer from "./storeSlices/booking/bookingSlice";
 
 export const store = configureStore({
   reducer: {
@@ -12,5 +13,6 @@ export const store = configureStore({
     appointments: appointmentReducer,
     guest: guestReducer,
     payment: paymentReducer,
+    bookings: bookingReducer,
   },
 });
