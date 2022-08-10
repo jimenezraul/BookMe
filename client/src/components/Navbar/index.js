@@ -101,7 +101,7 @@ const AppNavbar = () => {
             <div
               onToggle={() => setIsOpen(!isOpen)}
               className={`${
-                isOpen ? "opacity-100" : "opacity-0"
+                isOpen ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-96"
               } absolute top-16 transition-all duration-200`}
             >
               <ul
@@ -131,11 +131,6 @@ const AppNavbar = () => {
             </div>
           </div>
         </Navbar.Start>
-        <Navbar.Center>
-          <Button color='ghost' className='normal-case text-xl'>
-            Salon - BarberShop
-          </Button>
-        </Navbar.Center>
         <Navbar.End className='navbar-end relative'>
           <div className='flex-none gap-2' ref={profileRef}>
             <Button
@@ -156,8 +151,8 @@ const AppNavbar = () => {
             </Button>
             <div
               className={`absolute right-0 top-14 z-50 ${
-                isProfileOpen ? "opacity-100" : "opacity-0"
-              } transition-all duration-200`}
+                isProfileOpen ? "opacity-100 -translate-x-0" : "opacity-0 translate-x-96"
+              } transition-all duration-400`}
             >
               <Dropdown.Menu
                 className={`bg-white rounded-lg w-52 menu-compact shadow-lg border ${

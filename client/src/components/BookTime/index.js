@@ -8,7 +8,7 @@ import {
 } from "../../app/storeSlices/appointments/appointmentSlice";
 import { idbPromise } from "../../utils/helpers";
 
-const BookTime = ({ staff, services, date }) => {
+const BookTime = ({ staff, services, date, isModal }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const selectedService = useSelector(appointment);
@@ -16,6 +16,26 @@ const BookTime = ({ staff, services, date }) => {
     `/api/availability?staff=${staff}&services=${services}&selectedDate=${date}`
   );
 
+  const handleClick = (time) => {
+    dispatch(setAppointment({ ...selectedService, time }));
+    idbPromise("appointments", "put", {
+      ...selectedService,
+      time,
+    });
+    navigate(
+      `?staff=${staff}&services=${services}&date=${date}&time=${time.open}`
+    );
+  };
+
+  if (!loading && data.length === 0) {
+    return (
+      <div className='text-center text-xl font-bold'>
+        <p className="text-md">No available time for this date</p>
+        <p className="text-sm">Please select another date</p>
+      </div>
+    );
+  }
+ 
   if (error) {
     return (
       <div className='staff-services'>
@@ -40,38 +60,39 @@ const BookTime = ({ staff, services, date }) => {
     );
   }
 
-  const handleClick = (time) => {
-    dispatch(setAppointment({ ...selectedService, time }));
-    idbPromise("appointments", "put", {
-      ...selectedService,
-        time,
-    });
-    navigate(
-      `?staff=${staff}&services=${services}&date=${date}&time=${time.open}`
-    );
-  };
-
   return (
     <div className='staff-services'>
       <div className='container'>
-        <div className='flex flex-wrap justify-center w-full mb-5'>
-          {loading && <progress className='progress w-56'></progress>}
-          {data?.map((time, index) => (
-            <div key={index} className='flex w-1/2 md:w-4/12 lg:w-3/12 p-2'>
-              <div className='flex-1 card card-side bg-base-100 p- shadow-lg border border-base-300'>
-                <div className='card-body'>
-                  <h2 className='card-title'>{time.open}</h2>
-                  <Button
-                    onClick={() => handleClick(time)}
-                    color='primary'
-                    className='mt-2'
-                  >
-                    Select Time
-                  </Button>
-                </div>
-              </div>
+        <div className='flex flex-wrap w-full mb-5'>
+          {loading ? (
+            <div className='flex w-full justify-center'>
+              <progress className='progress progress-primary mt-10 w-56'></progress>
             </div>
-          ))}
+          ) : (
+            <>
+              {data?.map((time, index) => (
+                <div
+                  key={index}
+                  className={`flex ${
+                    isModal ? "w-1/2" : "w-1/2 md:w-4/12 lg:w-3/12"
+                  } p-2`}
+                >
+                  <div className='flex-1 card card-side bg-base-300 p- shadow-lg border border-base-300'>
+                    <div className='card-body'>
+                      <h2 className='card-title'>{time.open}</h2>
+                      <Button
+                        onClick={() => handleClick(time)}
+                        color='primary'
+                        className='mt-2'
+                      >
+                        Select Time
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </>
+          )}
         </div>
       </div>
     </div>

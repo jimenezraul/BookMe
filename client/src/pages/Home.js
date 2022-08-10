@@ -1,5 +1,5 @@
 import HeroSection from "../components/Hero";
-import Locations from "../components/Locations";
+import Location from "../components/Location";
 
 const Services = [
   {
@@ -24,8 +24,8 @@ const Services = [
 
 const Home = () => {
   return (
-    <div className='flex-1 flex flex-col justify-center items-center'>
-      <div className='container'>
+    <div className='flex-1'>
+      <div className='container mx-auto'>
         <HeroSection
           title='NextLevel Studio'
           subtitle='A Unisex Salon in the heart of the city.'
@@ -71,7 +71,11 @@ const Home = () => {
         </div>
       </section>
 
-      <section className='text-gray-600 body-font w-full'>
+      <div className='flex w-full justify-center'>
+      <section
+        id='location'
+        className='text-gray-600 body-font w-full max-w-5xl'
+      >
         <div className='container py-24 mx-auto'>
           <h1 className='text-center sm:text-3xl text-2xl font-medium title-font text-base-400 mb-4'>
             Our Location
@@ -79,9 +83,10 @@ const Home = () => {
           <div className='flex mt-6 justify-center mb-16'>
             <div className='w-16 h-1 rounded-full bg-blue-500 inline-flex'></div>
           </div>
-          <Locations />
+          <Location />
         </div>
       </section>
+    </div>
     </div>
   );
 };

@@ -1,79 +1,69 @@
 import { useEffect, useRef, useState } from "react";
-import { Card, Divider, Badge } from "react-daisyui";
-import { useSelector, useDispatch } from "react-redux";
-import {
-  appointment,
-  setAppointment,
-} from "../app/storeSlices/appointments/appointmentSlice";
+import { Card, Divider } from "react-daisyui";
 import { idbPromise } from "../utils/helpers";
 import { useNavigate } from "react-router-dom";
 import { cashAppInit } from "../utils/helpers";
-import { guest, setGuest } from "../app/storeSlices/guest/guestSlice";
+import { useIdbPromise } from "../hooks/useIdbPromise";
+import { useDispatch } from "react-redux";
+import { setPayment } from "../app/storeSlices/payment/paymentSlice";
+import { createBooking } from "../api/createBooking";
 
 const CashApp = () => {
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-  const appointments = useSelector(appointment);
-  const guestInfo = useSelector(guest);
+  const navigate = useNavigate();
   const [status, setStatus] = useState(null);
-  const paymentAmount = useRef();
   const cashAppPayEl = useRef();
   const paymentStatus = useRef();
 
-  useEffect(() => {
-    async function appointments() {
-      const appointLocal = await idbPromise("appointments", "get");
-      if (appointLocal.length > 0) {
-        dispatch(setAppointment(appointLocal[0]));
-        return;
-      }
-      navigate("/booknow");
-    }
-    appointments();
-  }, [dispatch, navigate]);
-
-  useEffect(() => {
-    if (!guestInfo) {
-      async function guest() {
-        const guestLocal = await idbPromise("guest", "get");
-        if (guestLocal.length > 0) {
-          dispatch(setGuest(guestLocal[0]));
-          return;
-        }
-        navigate("/booknow");
-      }
-      guest();
-    }
-  }, [dispatch, guestInfo, navigate]);
+  const { data: appointments } = useIdbPromise("appointments", "get");
+  const { data: guestInfo } = useIdbPromise("guest", "get");
 
   let amount = appointments?.price.toString();
 
   useEffect(() => {
     if (cashAppPayEl.current) {
-      cashAppInit(
-        amount,
-        paymentStatus.current,
-        paymentAmount.current,
-        paymentStatus.current,
-        setStatus
-      );
+      cashAppInit(amount, paymentStatus.current, setStatus);
     }
   }, [amount]);
-
+  
   useEffect(() => {
     if (status === "success") {
-      idbPromise("appointments", "delete", { ...appointments });
-      idbPromise("guest", "delete", { ...guestInfo });
-      dispatch(setAppointment(null));
-      dispatch(setGuest(null));
-      navigate("/profile");
-      return;
+      setLoading(true);
+      async function savePayment() {
+        const payment = await idbPromise("payment", "get");
+        const guest = await idbPromise("guest", "get");
+        const appointment = await idbPromise("appointments", "get");
+
+        const paymentData = {
+          data: {
+            payment: payment[0],
+            guest: guest[0],
+            appointment: appointment[0],
+          },
+        };
+
+        try {
+          await createBooking(paymentData);
+        } catch (error) {
+          console.log(error);
+        }
+
+        idbPromise("appointments", "delete", { ...appointments });
+        idbPromise("guest", "delete", { ...guestInfo });
+        dispatch(setPayment(payment[0]));
+        idbPromise("payment", "delete", { ...payment[0] });
+        setLoading(false);
+        navigate("/cashapp-success");
+        return;
+      }
+      savePayment();
     }
     if (status === "failure") {
       navigate("/cashapp-error");
       return;
     }
-  }, [status, dispatch, navigate, appointments, guestInfo]);
+  }, [status, navigate, appointments, guestInfo, dispatch]);
 
   return (
     <div className='flex-1 flex flex-col justify-center items-center px-2'>
@@ -83,35 +73,48 @@ const CashApp = () => {
         </h1>
         <Card className='bg-base-300 mb-2 shadow-md'>
           <Card.Body className='w-full max-w-md'>
-            <h1 className='text-xl font-bold'>Customer info</h1>
-            <Divider className='p-0 m-0' />
-            <div className='px-2 mb-3'>
-              <p className='font-semibold'>
-                Name: {guestInfo?.firstName} {guestInfo?.lastName}
-              </p>
-              <p className='font-semibold'>Email: {guestInfo?.email}</p>
-              <p className='font-semibold'>Phone: {guestInfo?.phone}</p>
-            </div>
+            {loading ? (
+              <div className='flex flex-col justify-center items-center'>
+                <h1 className="text-lg">Please wait...</h1>
+                <progress className='mt-5 progress progress-primary w-56'></progress>
+              </div>
+            ) : (
+              <>
+                <h1 className='text-xl font-bold'>Customer info</h1>
+                <Divider className='p-0 m-0' />
+                <div className='px-2 mb-3'>
+                  <p className='font-semibold'>
+                    Name: {guestInfo?.given_name} {guestInfo?.family_name}
+                  </p>
+                  <p className='font-semibold'>Email: {guestInfo?.email}</p>
+                  <p className='font-semibold'>
+                    Phone: {guestInfo?.phoneNumber}
+                  </p>
+                </div>
+              </>
+            )}
           </Card.Body>
         </Card>
-        <Card className='bg-base-300 shadow-md mb-5'>
-          <Card.Body className='w-full max-w-md'>
-            <h1 className='text-xl font-bold'>{appointments?.category}</h1>
-            <Divider className='p-0 m-0' />
-            <div className='px-2'>
-              <p className='font-semibold'>
-                {appointments?.itemVariationData.name}
-              </p>
-              <p className='font-semibold'>{appointments?.time.date}</p>
-              <p className='font-semibold'>at {appointments?.time.open}</p>
-              <p className='font-bold text-2xl text-end mt-3 p-5'>
-                Pay ${amount}
-              </p>
-              <div ref={cashAppPayEl}></div>
-            </div>
-            <div ref={paymentStatus}></div>
-          </Card.Body>
-        </Card>
+        {!loading && (
+          <Card className='bg-base-300 shadow-md mb-5'>
+            <Card.Body className='w-full max-w-md'>
+              <h1 className='text-xl font-bold'>{appointments?.category}</h1>
+              <Divider className='p-0 m-0' />
+              <div className='px-2'>
+                <p className='font-semibold'>
+                  {appointments?.itemVariationData.name}
+                </p>
+                <p className='font-semibold'>{appointments?.time.date}</p>
+                <p className='font-semibold'>at {appointments?.time.open}</p>
+                <p className='font-bold text-2xl text-end mt-3 p-5'>
+                  Pay ${amount}
+                </p>
+                <div ref={cashAppPayEl}></div>
+              </div>
+              <div ref={paymentStatus}></div>
+            </Card.Body>
+          </Card>
+        )}
       </div>
     </div>
   );

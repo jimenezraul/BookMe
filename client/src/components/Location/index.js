@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { theme } from "../../app/storeSlices/theme/themeSlice";
 import { useState, useEffect } from "react";
 
-const Locations = () => {
+const Location = () => {
   const { data, loading, error } = useFetch("/api/locations");
   const appTheme = useSelector(theme);
   const [isDark, setIsDark] = useState(appTheme === "night");
@@ -18,7 +18,7 @@ const Locations = () => {
 
   return (
     <div className='flex flex-wrap justify-center'>
-      {loading && <progress className='progress w-56'></progress>}
+      {loading && <progress className='progress w-56 my-10'></progress>}
       {data?.map((location, index) => {
         return (
           <div
@@ -65,4 +65,4 @@ const Locations = () => {
   );
 };
 
-export default Locations;
+export default Location;

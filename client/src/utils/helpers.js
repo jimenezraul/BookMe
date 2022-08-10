@@ -1,4 +1,3 @@
-import { Badge } from "react-daisyui";
 export function formatPhoneNumber(phoneNumberString, prevousValue) {
   if (phoneNumberString.length < prevousValue.length) {
     return phoneNumberString;
@@ -20,12 +19,12 @@ export function formatPhoneNumber(phoneNumberString, prevousValue) {
 
 export function validation(value, type) {
   // validate first name, last name, email, phone
-  if (type === "firstName") {
+  if (type === "given_name") {
     if (value.length < 3) {
       return "First name must be at least 3 characters";
     }
   }
-  if (type === "lastName") {
+  if (type === "family_name") {
     if (value.length < 3) {
       return "Last name must be at least 3 characters";
     }
@@ -35,7 +34,7 @@ export function validation(value, type) {
       return "Invalid email address";
     }
   }
-  if (type === "phone") {
+  if (type === "phoneNumber") {
     if (value.length < 14) {
       return "Phone number must be at least 10 Digits";
     }
@@ -61,6 +60,7 @@ export function idbPromise(storeName, method, object) {
       // create object store for each type of data and set "primary" key index to be the `id` of the data
       db.createObjectStore("appointments", { keyPath: "id" });
       db.createObjectStore("guest", { keyPath: "id" });
+      db.createObjectStore("payment", { keyPath: "id" });
     };
 
     // handle any errors with connecting
@@ -109,17 +109,11 @@ export function idbPromise(storeName, method, object) {
   });
 }
 
-export function cashAppInit(
-  amount,
-  cashAppPayEl,
-  cashAppPriceDiv,
-  cachAppContainer,
-  setStatus
-) {
+export function cashAppInit(amount, cashAppPayEl, setStatus) {
   const appId = "sandbox-sq0idb-uc1hM_aoBdq14A5bJynh9Q";
   const locationId = "L9XMGJMVQGY2D";
 
-  if (amount === undefined) {
+  if (!amount) {
     return;
   }
 
@@ -200,10 +194,7 @@ export function cashAppInit(
     try {
       payments = window.Square.payments(appId, locationId);
     } catch {
-      const statusContainer = cachAppContainer;
-      statusContainer.className = "missing-credentials";
-      statusContainer.style.visibility = "visible";
-      return;
+      throw new Error("Something went wrong with the Square.js library");
     }
 
     let cashAppPay;
@@ -223,7 +214,7 @@ export function cashAppInit(
             const paymentResults = await createPayment(tokenResult.token);
             displayPaymentResults("SUCCESS");
             setStatus("success");
-            console.debug("Payment Success", paymentResults);
+            idbPromise("payment", "put", paymentResults.payment);
           } else {
             let errorMessage = `Tokenization failed with status: ${tokenResult.status}`;
 
