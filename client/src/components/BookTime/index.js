@@ -27,6 +27,15 @@ const BookTime = ({ staff, services, date, isModal }) => {
     );
   };
 
+  if (!loading && data.length === 0) {
+    return (
+      <div className='text-center text-xl font-bold'>
+        <p className="text-md">No available time for this date</p>
+        <p className="text-sm">Please select another date</p>
+      </div>
+    );
+  }
+ 
   if (error) {
     return (
       <div className='staff-services'>

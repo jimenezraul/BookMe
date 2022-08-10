@@ -9,7 +9,6 @@ router.put("/", async (req, res) => {
     time,
     customerId,
     locationId,
-    appointments,
     appointmentSegments,
   } = data;
 

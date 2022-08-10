@@ -1,25 +1,27 @@
 import { Badge, Card } from "react-daisyui";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const BookingSuccess = () => {
   const [count, setCount] = useState(5);
   const navigate = useNavigate();
 
-  const redirectToBooking = () => {
-    const timer = setInterval(() => {
-      setCount(count - 1);
-    }, 1000);
+  useEffect(() => {
+    const redirectToBooking = () => {
+      const timer = setInterval(() => {
+        setCount(count - 1);
+      }, 1000);
 
-    if (count === 0) {
-      clearInterval(timer);
-    }
-    setTimeout(() => {
-      navigate("/profile");
-    }, 5000);
-  };
+      if (count === 0) {
+        clearInterval(timer);
+      }
+      setTimeout(() => {
+        navigate("/profile");
+      }, 5000);
+    };
 
-  redirectToBooking();
+    redirectToBooking();
+  }, [count, navigate]);
   return (
     <div className='flex-1'>
       <div className='container mx-auto mt-10 flex justify-center'>

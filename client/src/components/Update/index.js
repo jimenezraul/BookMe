@@ -5,10 +5,9 @@ import { useEffect } from "react";
 import { Divider, Button } from "react-daisyui";
 import { useState } from "react";
 import { updateBooking } from "../../api/updateBooking";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   updateBookings,
-  booking,
 } from "../../app/storeSlices/booking/bookingSlice";
 
 const Update = ({ onClose }) => {
@@ -17,8 +16,6 @@ const Update = ({ onClose }) => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const { isAuthenticated } = useAuth0();
-  const bookings = useSelector(booking);
-  console.log(bookings);
   useEffect(() => {
     async function handleAppointment() {
       const appointLocal = await idbPromise("appointments", "get");
