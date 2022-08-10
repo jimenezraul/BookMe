@@ -45,14 +45,14 @@ const Services = () => {
         <div className='flex flex-col justify-center items-center'>
           <h1 className='text-3xl font-bold text-center'>Our Services</h1>
         </div>
-        <div className='flex mt-6 justify-center mb-16'>
+        <div className='flex mt-6 justify-center mb-5 md:mb-10'>
           <div className='w-16 h-1 rounded-full bg-blue-500 inline-flex'></div>
         </div>
         <div className='flex flex-wrap'>
-          <div className='flex flex-col w-full md:w-1/2 p-1'>
+          <div className='flex flex-col w-full md:w-1/2 p-1 space-y-2'>
             {data?.map((service) => (
-              <div key={service.id} className='w-full p-2'>
-                <Card className='bg-base-300'>
+              <div key={service.id} className='w-full'>
+                <Card className='bg-base-300 shadow-md'>
                   <Card.Body>
                     <h1 className='text-2xl font-bold text-center mb-5'>
                       {service.itemData.name}
@@ -83,11 +83,11 @@ const Services = () => {
             ))}
           </div>
           <div className='hidden md:block md:w-1/2 p-1'>
-            <Card className='bg-base-300'>
+            <Card className='bg-base-300 shadow-md'>
               <Card.Body>
                 {photos.map((photo, index) => (
                   <div key={index}>
-                    <img src={photo.url} alt={photo.alt} className='w-full rounded-2xl' />
+                    <img src={photo.url} alt={photo.alt} className='w-full rounded-2xl shadow' />
                   </div>
                 ))}
               </Card.Body>
