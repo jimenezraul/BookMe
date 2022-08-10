@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { theme } from "../../app/storeSlices/theme/themeSlice";
 import { useSelector } from "react-redux";
+import Loading from "../Loading";
 
 const Staff = () => {
   const isDark = useSelector(theme);
@@ -23,9 +24,7 @@ const Staff = () => {
 
   return (
     <div className='flex flex-wrap justify-center w-full mb-5 mt-5'>
-      {loading && (
-        <progress className='progress progress-primary w-56'></progress>
-      )}
+      {loading && <Loading />}
 
       {staff?.map((staff, index) => (
         <div key={index} className='flex w-full md:w-1/2 p-2'>

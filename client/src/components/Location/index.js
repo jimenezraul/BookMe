@@ -2,6 +2,7 @@ import { useFetch } from "../../hooks/useFetch";
 import { useSelector } from "react-redux";
 import { theme } from "../../app/storeSlices/theme/themeSlice";
 import { useState, useEffect } from "react";
+import Loading from "../Loading";
 
 const Location = () => {
   const { data, loading, error } = useFetch("/api/locations");
@@ -18,14 +19,14 @@ const Location = () => {
 
   return (
     <div className='flex flex-wrap justify-center'>
-      {loading && <progress className='progress w-56 my-10'></progress>}
+      {loading && <Loading />}
       {data?.map((location, index) => {
         return (
           <div
             key={index}
             className={`${
               isDark ? "bg-slate-800" : "bg-gray-100"
-            } p-2 flex flex-wrap w-11/12 justify-center pt-6 px-4 rounded-xl shadow-lg pb-10 md:pb-6 mb-10 border-gray-200`}
+            } p-2 flex flex-wrap w-11/12 justify-center pt-6 px-4 rounded-xl shadow-lg pb-10 md:pb-6 border-gray-200`}
           >
             <div className='w-full md:w-1/2 flex flex-col justify-center'>
               <div className={`text-center md:text-end border-b md:border-b-0 md:border-r ${isDark ? "border-slate-700" : "border-slate-300"} p-5`}>

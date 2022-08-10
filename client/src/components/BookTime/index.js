@@ -7,6 +7,7 @@ import {
   appointment,
 } from "../../app/storeSlices/appointments/appointmentSlice";
 import { idbPromise } from "../../utils/helpers";
+import Loading from "../Loading";
 
 const BookTime = ({ staff, services, date, isModal }) => {
   const dispatch = useDispatch();
@@ -30,12 +31,12 @@ const BookTime = ({ staff, services, date, isModal }) => {
   if (!loading && data.length === 0) {
     return (
       <div className='text-center text-xl font-bold'>
-        <p className="text-md">No available time for this date</p>
-        <p className="text-sm">Please select another date</p>
+        <p className='text-md'>No available time for this date</p>
+        <p className='text-sm'>Please select another date</p>
       </div>
     );
   }
- 
+
   if (error) {
     return (
       <div className='staff-services'>
@@ -66,7 +67,7 @@ const BookTime = ({ staff, services, date, isModal }) => {
         <div className='flex flex-wrap w-full mb-5'>
           {loading ? (
             <div className='flex w-full justify-center'>
-              <progress className='progress progress-primary mt-10 w-56'></progress>
+              <Loading />
             </div>
           ) : (
             <>

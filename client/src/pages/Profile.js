@@ -9,6 +9,7 @@ import { deleteBooking } from "../api/deleteBooking";
 import AppointmentList from "../components/AppointmentList";
 import { useSelector, useDispatch } from "react-redux";
 import { booking, setBooking } from "../app/storeSlices/booking/bookingSlice";
+import Loading from "../components/Loading";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -70,7 +71,7 @@ const Profile = () => {
                 <Divider />
                 {bookingLoading ? (
                   <div className='flex flex-wrap justify-center w-full'>
-                    <progress className='progress progress-primary w-56 my-10'></progress>
+                    <Loading />
                   </div>
                 ) : appointments.length > 0 ? (
                   appointments.map((appointment, index) => {
