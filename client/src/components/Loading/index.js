@@ -6,7 +6,7 @@ const Loading = () => {
   const isDark = useSelector(theme);
 
   return (
-    <div class='lds-roller mt-10'>
+    <div className='lds-roller mt-10'>
       <div className={`${isDark === "night" ? "after:bg-[#3ABFF8]" : "after:bg-[#057AFF] shadow-md"}`}></div>
       <div className={`${isDark === "night" ? "after:bg-[#3ABFF8]" : "after:bg-[#057AFF] shadow-md"}`}></div>
       <div className={`${isDark === "night" ? "after:bg-[#3ABFF8]" : "after:bg-[#057AFF] shadow-md"}`}></div>

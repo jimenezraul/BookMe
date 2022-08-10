@@ -34,9 +34,11 @@ const Staff = () => {
                 <img
                   src={staff.profileImageUrl ? staff.profileImageUrl : imgUrl}
                   alt={staff.displayName}
-                  className={
-                    isDark === "night" ? "bg-slate-600" : "bg-slate-200"
-                  }
+                  className={`${
+                    isDark === "night"
+                      ? "bg-[#5fcfff]"
+                      : "bg-[#ffffff]"
+                  }`}
                 />
               </div>
             </div>
