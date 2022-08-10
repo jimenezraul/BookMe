@@ -3,7 +3,7 @@ export const getBooking = async (client) => {
   
   try {
     const response = await fetch(
-      `http://localhost:3001/api/customer/booking/${client}`,
+      `/api/customer/booking/${client}`,
       {
         headers: {
           "Content-Type": "application/json",
