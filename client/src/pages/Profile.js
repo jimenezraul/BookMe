@@ -5,7 +5,6 @@ import { useState } from "react";
 import { getBooking } from "../api/getBookings";
 import { getOrCreate } from "../api/customer";
 import Login from "../components/Login";
-import { deleteBooking } from "../api/deleteBooking";
 import AppointmentList from "../components/AppointmentList";
 import { useSelector, useDispatch } from "react-redux";
 import { booking, setBooking } from "../app/storeSlices/booking/bookingSlice";
@@ -19,8 +18,8 @@ const Profile = () => {
   const { user, isAuthenticated } = useAuth0();
 
   useEffect(() => {
-    setBookingLoading(true);
     if (isAuthenticated) {
+      setBookingLoading(true);
       async function fetchData() {
         const data = await getOrCreate([user]);
         const booking = await getBooking(data.id);
@@ -40,15 +39,6 @@ const Profile = () => {
 
   if (!isAuthenticated) {
     return <Login />;
-  }
-  console.log(appointments);
-  async function handleDelete(id) {
-    const response = await deleteBooking(id);
-    if (response) {
-      dispatch(
-        setBooking(appointments.filter((appointment) => appointment.id !== id))
-      );
-    }
   }
 
   return (
@@ -87,9 +77,8 @@ const Profile = () => {
                     return (
                       <AppointmentList
                         key={index}
-                        appointment={appointment}
+                        appoint={appointment}
                         isLast={isLast}
-                        onDelete={handleDelete}
                       />
                     );
                   })
