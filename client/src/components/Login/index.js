@@ -17,7 +17,7 @@ const Login = () => {
                 className='w-full'
                 onClick={() => loginWithPopup()}
               >
-                Login with Google
+                Login
               </Button>
             </div>
           </Card.Body>

@@ -10,6 +10,7 @@ import AppointmentList from "../components/AppointmentList";
 import { useSelector, useDispatch } from "react-redux";
 import { booking, setBooking } from "../app/storeSlices/booking/bookingSlice";
 import Loading from "../components/Loading";
+import { idbPromise } from "../utils/helpers";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -25,15 +26,22 @@ const Profile = () => {
         const booking = await getBooking(data.id);
         dispatch(setBooking(booking));
         setBookingLoading(false);
+        //delete all idb bookings
+        const bookings = await idbPromise("appointments", "get");
+        if (bookings.length > 0) {
+          bookings.forEach((booking) => {
+            idbPromise("appointments", "delete", { ...booking });
+          });
+        }
       }
       fetchData();
     }
-  }, [isAuthenticated, user, dispatch]);
+  }, [isAuthenticated, dispatch, user]);
 
   if (!isAuthenticated) {
     return <Login />;
   }
-
+  console.log(appointments);
   async function handleDelete(id) {
     const response = await deleteBooking(id);
     if (response) {

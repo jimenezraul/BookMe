@@ -188,7 +188,7 @@ const AppNavbar = () => {
                         logout({ returnTo: window.location.origin })
                       }
                     >
-                      Logout
+                      LOGOUT
                     </Dropdown.Item>
                   </>
                 ) : (
@@ -196,7 +196,7 @@ const AppNavbar = () => {
                     className='font-bold'
                     onClick={() => loginWithPopup()}
                   >
-                    Login
+                    LOGIN
                   </Dropdown.Item>
                 )}
 
