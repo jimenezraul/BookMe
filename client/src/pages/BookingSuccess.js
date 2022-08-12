@@ -24,14 +24,14 @@ const BookingSuccess = () => {
   }, [count, navigate]);
   return (
     <div className='flex-1'>
-      <div className='container mx-auto mt-10 flex justify-center'>
+      <div className='container mx-auto mt-10 flex justify-center p-3'>
         <Card className='bg-base-300 mb-2 shadow-md'>
           <Card.Body className='w-full max-w-lg'>
             <h1 className='text-3xl font-bold text-center'>Thank You!</h1>
-            <p className='text-xl'>
+            <p className='text-xl text-center'>
               Your Appointment has been booked successfully.
             </p>
-            <span>
+            <span className="text-center">
               You will be redirected to your profile page in{" "}
               <Badge color='primary'>{count}</Badge> seconds.
             </span>

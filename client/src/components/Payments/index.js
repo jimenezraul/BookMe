@@ -32,7 +32,7 @@ const Payments = () => {
 
   return (
     <div className='flex-1 flex flex-col justify-center items-center'>
-      <div className='container mt-5 flex justify-center'>
+      <div className='container mt-5 flex justify-center p-3'>
         <div className='w-full max-w-md'>
           <h1 className='text-center text-2xl font-bold'>Payments</h1>
           <Card className='bg-base-300 mb-10 p-5 rounded-xl mt-2'>

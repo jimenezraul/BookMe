@@ -102,7 +102,7 @@ const Guest = () => {
         <HeroSection title='Book as Guest' />
       </div>
       {!payment ? (
-        <div className='w-full max-w-sm'>
+        <div className='w-full max-w-sm p-3'>
           <form
             onSubmit={(e) => onSubmit(e)}
             className='flex flex-col space-y-3 bg-base-300 shadow-md rounded px-8 pt-6 pb-8 mb-4 mt-5'
