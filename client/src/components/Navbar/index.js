@@ -163,7 +163,7 @@ const AppNavbar = () => {
                   <>
                     <Form className='p-2'>
                       <Form.Label
-                        title={user.name}
+                        title={user.given_name + " " + user.family_name}
                         className='font-bold'
                       ></Form.Label>
                     </Form>
@@ -188,7 +188,7 @@ const AppNavbar = () => {
                         logout({ returnTo: window.location.origin })
                       }
                     >
-                      Logout
+                      LOGOUT
                     </Dropdown.Item>
                   </>
                 ) : (
@@ -196,7 +196,7 @@ const AppNavbar = () => {
                     className='font-bold'
                     onClick={() => loginWithPopup()}
                   >
-                    Login
+                    LOGIN
                   </Dropdown.Item>
                 )}
 

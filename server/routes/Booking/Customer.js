@@ -80,11 +80,13 @@ router.get("/booking/:customerId", async (req, res) => {
     const booking = response.result.bookings.filter(
       (booking) => booking.customerId === id && booking.status === "ACCEPTED"
     );
-   
+
     // All services
     let services = await client.catalogApi.searchCatalogItems({
       productTypes: ["APPOINTMENTS_SERVICE"],
     });
+
+    const staff = await client.bookingsApi.listTeamMemberBookingProfiles(true);
 
     services = services.result.items;
     // Customer's booking services
@@ -106,16 +108,26 @@ router.get("/booking/:customerId", async (req, res) => {
       filteredData.forEach((item) => {
         item.category = categories.filter((category) => {
           return category.itemData?.variations?.some(
-            (variation) => variation.itemVariationData.itemId === item.itemVariationData.itemId
+            (variation) =>
+              variation.itemVariationData.itemId ===
+              item.itemVariationData.itemId
           );
-        })[0].itemData.name
+        })[0].itemData.name;
       });
-      
+
+      // Get staff name
+      const staffId = b.appointmentSegments[0].teamMemberId;
+
+      const barber = staff.result.teamMemberBookingProfiles.find(
+        (staff) => staff.teamMemberId === staffId
+      );
+
       return {
         ...b,
         appointments: filteredData,
         appointmentDate: date.format(start, "ddd, MMM DD YYYY"),
         appointmentTime: date.format(start, "hh:mm A"),
+        barber: barber
       };
     });
 

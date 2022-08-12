@@ -4,7 +4,8 @@ import { Divider } from "react-daisyui";
 import { useDispatch } from "react-redux";
 import { setAppointment } from "../../app/storeSlices/appointments/appointmentSlice";
 import { idbPromise } from "../../utils/helpers";
-import { useEffect } from "react";
+import { useEffect } from "react"; 
+import Loading from "../Loading";
 
 const StaffServices = ({ staff }) => {
   const dispatch = useDispatch();
@@ -33,7 +34,7 @@ const StaffServices = ({ staff }) => {
       <div className='container'>
         <div className='flex flex-wrap w-full mb-5 justify-center'>
           {loading && (
-            <progress className='progress progress-primary w-56 my-10'></progress>
+            <Loading />
           )}
           {data?.map((service, index) => (
             <div key={index} className='w-full md:w-1/2 p-1'>

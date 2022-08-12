@@ -6,7 +6,7 @@ const Login = () => {
 
   return (
     <div className='flex-1 flex justify-center items-center'>
-      <div className='container mx-auto flex flex-col justify-center items-center'>
+      <div className='container mx-auto flex flex-col justify-center items-center p-3'>
         <Card className="bg-base-300 w-full max-w-md">
           <Card.Body className="w-full">
                       <h1 className='text-center text-3xl font-bold'>Login</h1>
@@ -17,7 +17,7 @@ const Login = () => {
                 className='w-full'
                 onClick={() => loginWithPopup()}
               >
-                Login with Google
+                Login
               </Button>
             </div>
           </Card.Body>

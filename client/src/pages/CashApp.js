@@ -7,6 +7,7 @@ import { useIdbPromise } from "../hooks/useIdbPromise";
 import { useDispatch } from "react-redux";
 import { setPayment } from "../app/storeSlices/payment/paymentSlice";
 import { createBooking } from "../api/createBooking";
+import Loading from "../components/Loading";
 
 const CashApp = () => {
   const [loading, setLoading] = useState(false);
@@ -66,7 +67,7 @@ const CashApp = () => {
   }, [status, navigate, appointments, guestInfo, dispatch]);
 
   return (
-    <div className='flex-1 flex flex-col justify-center items-center px-2'>
+    <div className='flex-1 flex flex-col justify-center items-center px-3'>
       <div className='mt-10 w-full max-w-md'>
         <h1 className='text-center p-5 text-xl font-bold'>
           Complete your Appointment
@@ -76,7 +77,7 @@ const CashApp = () => {
             {loading ? (
               <div className='flex flex-col justify-center items-center'>
                 <h1 className="text-lg">Please wait...</h1>
-                <progress className='mt-5 progress progress-primary w-56'></progress>
+                <Loading />
               </div>
             ) : (
               <>

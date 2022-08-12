@@ -5,10 +5,11 @@ import { useState } from "react";
 import { getBooking } from "../api/getBookings";
 import { getOrCreate } from "../api/customer";
 import Login from "../components/Login";
-import { deleteBooking } from "../api/deleteBooking";
 import AppointmentList from "../components/AppointmentList";
 import { useSelector, useDispatch } from "react-redux";
 import { booking, setBooking } from "../app/storeSlices/booking/bookingSlice";
+import Loading from "../components/Loading";
+import { idbPromise } from "../utils/helpers";
 
 const Profile = () => {
   const dispatch = useDispatch();
@@ -17,34 +18,32 @@ const Profile = () => {
   const { user, isAuthenticated } = useAuth0();
 
   useEffect(() => {
-    setBookingLoading(true);
     if (isAuthenticated) {
+      setBookingLoading(true);
       async function fetchData() {
         const data = await getOrCreate([user]);
         const booking = await getBooking(data.id);
         dispatch(setBooking(booking));
         setBookingLoading(false);
+        //delete all idb bookings
+        const bookings = await idbPromise("appointments", "get");
+        if (bookings.length > 0) {
+          bookings.forEach((booking) => {
+            idbPromise("appointments", "delete", { ...booking });
+          });
+        }
       }
       fetchData();
     }
-  }, [isAuthenticated, user, dispatch]);
+  }, [isAuthenticated, dispatch, user]);
 
   if (!isAuthenticated) {
     return <Login />;
   }
 
-  async function handleDelete(id) {
-    const response = await deleteBooking(id);
-    if (response) {
-      dispatch(
-        setBooking(appointments.filter((appointment) => appointment.id !== id))
-      );
-    }
-  }
-
   return (
     <div className='flex-1'>
-      <div className='container mt-10 mx-auto'>
+      <div className='container mt-10 mx-auto p-3'>
         <div className='flex flex-wrap justify-center'>
           <div className='w-full lg:w-5/12 p-1 flex flex-col items-center'>
             <Card className='bg-base-300 mb-2 shadow-md w-full'>
@@ -70,7 +69,7 @@ const Profile = () => {
                 <Divider />
                 {bookingLoading ? (
                   <div className='flex flex-wrap justify-center w-full'>
-                    <progress className='progress progress-primary w-56 my-10'></progress>
+                    <Loading />
                   </div>
                 ) : appointments.length > 0 ? (
                   appointments.map((appointment, index) => {
@@ -78,9 +77,8 @@ const Profile = () => {
                     return (
                       <AppointmentList
                         key={index}
-                        appointment={appointment}
+                        appoint={appointment}
                         isLast={isLast}
-                        onDelete={handleDelete}
                       />
                     );
                   })

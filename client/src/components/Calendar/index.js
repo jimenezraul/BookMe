@@ -1,6 +1,7 @@
 import Calendar from "react-calendar";
 import { Card } from "react-daisyui";
 import { useNavigate } from "react-router-dom";
+import { datePast } from "../../utils/helpers";
 const date = require("date-and-time");
 require("./styles.css");
 
@@ -22,6 +23,7 @@ const BookCalendar = ({ staff, service }) => {
               <Calendar
                 className='text-center'
                 onChange={(e) => dateSelection(e)}
+                tileDisabled={datePast}
               />
             </div>
           </Card.Body>

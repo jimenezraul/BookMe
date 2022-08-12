@@ -2,7 +2,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
 import { idbPromise } from "../../utils/helpers";
 import { useEffect } from "react";
-import { Divider, Button } from "react-daisyui";
+import { Divider, Button, Card } from "react-daisyui";
 import { createBooking } from "../../api/createBooking";
 import { useState } from "react";
 
@@ -52,6 +52,31 @@ const Confirm = () => {
       }
     }
   };
+  
+  if (isAuthenticated && !user.email_verified) {
+    return (
+      <div className='flex-1'>
+        <div className='container mt-10 mx-auto'>
+          <div className='flex flex-wrap justify-center'>
+            <div className='w-full lg:w-5/12 p-1 flex flex-col items-center'>
+              <Card className='bg-base-300 mb-2 shadow-md w-full'>
+                <Card.Body className='w-full flex justify-center'>
+                  <h1 className='text-xl font-semibold text-center'>
+                    Please verify your email address.
+                  </h1>
+                  <Divider />
+                  <p className='text-lg font-semibold'>
+                    We have sent you an email to verify your email address.
+                    Please click the link in the email to complete your account verification
+                  </p>
+                </Card.Body>
+              </Card>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className='flex flex-wrap justify-center w-full mb-5'>
