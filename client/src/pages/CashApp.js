@@ -67,7 +67,7 @@ const CashApp = () => {
   }, [status, navigate, appointments, guestInfo, dispatch]);
 
   return (
-    <div className='flex-1 flex flex-col justify-center items-center px-2'>
+    <div className='flex-1 flex flex-col justify-center items-center px-3'>
       <div className='mt-10 w-full max-w-md'>
         <h1 className='text-center p-5 text-xl font-bold'>
           Complete your Appointment
