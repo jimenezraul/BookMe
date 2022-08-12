@@ -78,7 +78,7 @@ router.post("/", async (req, res) => {
 
   let sellerNote = "";
   if (payment) {
-    sellerNote = `Receipt Number: ${receiptNumber} Receipt Link: ${receiptUrl} Total: $${
+    sellerNote = `Receipt Number: ${receiptNumber} | Receipt Link: ${receiptUrl} | Total: $${
       totalMoney.amount / 100
     }`;
   }

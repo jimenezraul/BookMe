@@ -163,7 +163,7 @@ const AppNavbar = () => {
                   <>
                     <Form className='p-2'>
                       <Form.Label
-                        title={user.name}
+                        title={user.given_name + " " + user.family_name}
                         className='font-bold'
                       ></Form.Label>
                     </Form>
