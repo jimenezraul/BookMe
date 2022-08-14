@@ -23,7 +23,7 @@ const BookingSuccess = () => {
     redirectToBooking();
   }, [count, navigate]);
   return (
-    <div className='flex-1'>
+    <div className='flex-1 flex justify-center items-center'>
       <div className='container mx-auto mt-10 flex justify-center p-3'>
         <Card className='bg-base-300 mb-2 shadow-md'>
           <Card.Body className='w-full max-w-lg'>
