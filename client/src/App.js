@@ -15,6 +15,8 @@ import BookingSuccess from "./pages/BookingSuccess";
 import Profile from "./pages/Profile";
 import Locations from "./pages/Locations";
 import Services from "./pages/Services";
+import Success from "./pages/Success";
+import PageNotFound from "./pages/PageNotFound";
 
 function App() {
   const appTheme = useSelector(theme);
@@ -31,10 +33,12 @@ function App() {
               <Route path='/guest' element={<Guest />} />
               <Route path='/cashapp-pay' element={<CashApp />} />
               <Route path='/cashapp-success' element={<CashAppSuccess />} />
-              <Route path="/booking-success" element={<BookingSuccess />} />
+              <Route path='/booking-success' element={<BookingSuccess />} />
               <Route path='/profile' element={<Profile />} />
               <Route path='/locations' element={<Locations />} />
               <Route path='/services' element={<Services />} />
+              <Route path='/payment/success' element={<Success />} />
+              <Route path='/*' element={<PageNotFound />} />
             </Routes>
           </div>
           <Footer />

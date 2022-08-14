@@ -97,8 +97,8 @@ const Guest = () => {
   };
 
   return (
-    <div className='flex-1 flex flex-col justify-center items-center'>
-      <div className='container'>
+    <div className='flex-1 flex flex-col items-center'>
+      <div className='container mx-auto'>
         <HeroSection title='Book as Guest' />
       </div>
       {!payment ? (

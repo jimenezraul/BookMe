@@ -27,8 +27,9 @@ const Home = () => {
     <div className='flex-1'>
       <div className='container mx-auto'>
         <HeroSection
-          title='NextLevel Studio'
-          subtitle='A Unisex Salon in the heart of the city.'
+          title='BOOK'
+          span="ME"
+          subtitle='A Booking System for Hair Salons and Barbershops'
           buttonName='BookNow'
           link='/booknow'
         />

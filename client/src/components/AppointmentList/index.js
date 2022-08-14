@@ -1,9 +1,12 @@
-import { Button, Divider } from "react-daisyui";
+import { Button, Divider, Badge } from "react-daisyui";
 import { useState } from "react";
 import RescheduleModal from "../RescheduleModal";
 import { deleteBooking } from "../../api/deleteBooking";
 import { useSelector, useDispatch } from "react-redux";
-import { setBooking, booking } from "../../app/storeSlices/booking/bookingSlice";
+import {
+  setBooking,
+  booking,
+} from "../../app/storeSlices/booking/bookingSlice";
 
 const AppointmentList = ({ appoint, isLast }) => {
   const dispatch = useDispatch();
@@ -37,13 +40,12 @@ const AppointmentList = ({ appoint, isLast }) => {
         <p className='text-lg font-bold'>
           {appoint.appointments[0].itemVariationData.name}
         </p>
-        <p className='text-lg font-bold text-end'>
-          ${appoint.appointments[0].itemVariationData.priceMoney.amount / 100}
-        </p>
+        <div className='text-lg font-bold text-end'>
+          <Badge color='primary'>${appoint.appointments[0].itemVariationData.priceMoney.amount / 100}</Badge>
+        </div>
       </div>
-      <p className='text-lg font-bold mt-1'>
-        {appoint.appointmentDate} at {appoint.appointmentTime}
-      </p>
+      <p className='text-lg font-bold'>{appoint.appointmentDate}</p>
+      <p className='text-lg font-bold'>at {appoint.appointmentTime}</p>
       <p className='mt-1 text-sm font-bold'>
         Staff: {appoint.barber.displayName}
       </p>
