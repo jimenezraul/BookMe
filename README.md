@@ -11,7 +11,7 @@ BookMe is a web application that give Salon|Barbershop owner the platform they n
 [Live Demo](https://desolate-chamber-34231.herokuapp.com/)
 
 ## YouTube Video
-[YouTube Video](https://youtu.be/y27I4qnjme4)
+[![BookMe YouTube](server/public/assets/img/youtube.png)](https://www.youtube.com/watch?v=y27I4qnjme4)
 
 ## Tools Used
 - React - [React](https://reactjs.org/)
