@@ -5,7 +5,7 @@
 <h3 align="center">BookMe</h3>
 
 ## Description
-BookMe is a web application that give Salon|Barbershop owner the platform they need to bring their business to the next level. The application is designed to give customers the ability to book appointments online and manage their appointments. If customers want to make an appointment as guest they will require to make a payment with Cashapp pay or credit card. Booking and payment system is powered by Squareup API.
+BookMe is a web application that give Salon|Barbershop owner the platform they need to bring their business to the next level. The application is designed to give customers the ability to book appointments online and manage their appointments. If customers want to make an appointment as guest, it will require to make a payment with Cashapp pay or credit card. Booking and payment system is powered by Squareup API.
 
 ## Deploy on Heroku
 [Live Demo](https://desolate-chamber-34231.herokuapp.com/)
