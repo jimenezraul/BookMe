@@ -2,6 +2,7 @@
   "name": "client",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://book-6zwhw4zop-jimenezraul.vercel.app/",
   "proxy": "http://localhost:3001/",
   "dependencies": {
     "@auth0/auth0-react": "^1.10.2",
