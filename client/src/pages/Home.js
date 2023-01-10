@@ -1,39 +1,37 @@
-import HeroSection from "../components/Hero";
-import Location from "../components/Location";
+import HeroSection from '../components/Hero';
+import Location from '../components/Location';
 
 const Services = [
   {
-    title: "Haircut & Styling",
+    title: 'Haircut & Styling',
     description:
-      "Modern styling combined with precision cutting for Women, Men, and Children.",
-    icon: "/assets/img/barber-shop.png",
+      'Modern styling combined with precision cutting for Women, Men, and Children.',
+    icon: '/assets/img/barber-shop.png',
   },
   {
-    title: "Coloting & Highlights",
+    title: 'Coloting & Highlights',
     description:
       "Get the perfect Balayage, Ombre, highlights, or hair color, that you've always wanted.",
-    icon: "/assets/img/hair-dye-kit.png",
+    icon: '/assets/img/hair-dye-kit.png',
   },
   {
-    title: "Hair Extensions",
+    title: 'Hair Extensions',
     description:
-      "100% human hair available in Hand Tied, Fusion, Tape-in or Clip-in hair extensions.",
-    icon: "/assets/img/hair.png",
+      '100% human hair available in Hand Tied, Fusion, Tape-in or Clip-in hair extensions.',
+    icon: '/assets/img/hair.png',
   },
 ];
 
 const Home = () => {
   return (
     <div className='flex-1'>
-      <div className='container mx-auto'>
-        <HeroSection
-          title='BOOK'
-          span="ME"
-          subtitle='A Booking System for Hair Salons and Barbershops'
-          buttonName='BookNow'
-          link='/booknow'
-        />
-      </div>
+      <HeroSection
+        title='BOOK'
+        span='ME'
+        subtitle='A Booking System for Hair Salons and Barbershops'
+        buttonName='BookNow'
+        link='/booknow'
+      />
 
       <section className='text-gray-600 body-font'>
         <div className='container px-5 py-16 mx-auto'>
@@ -73,21 +71,21 @@ const Home = () => {
       </section>
 
       <div className='flex w-full justify-center'>
-      <section
-        id='location'
-        className='text-gray-600 body-font w-full max-w-5xl'
-      >
-        <div className='container py-24 mx-auto'>
-          <h1 className='text-center sm:text-3xl text-2xl font-medium title-font text-base-400 mb-4'>
-            Our Location
-          </h1>
-          <div className='flex mt-6 justify-center mb-16'>
-            <div className='w-16 h-1 rounded-full bg-blue-500 inline-flex'></div>
+        <section
+          id='location'
+          className='text-gray-600 body-font w-full max-w-5xl'
+        >
+          <div className='container py-24 mx-auto'>
+            <h1 className='text-center sm:text-3xl text-2xl font-medium title-font text-base-400 mb-4'>
+              Our Location
+            </h1>
+            <div className='flex mt-6 justify-center mb-16'>
+              <div className='w-16 h-1 rounded-full bg-blue-500 inline-flex'></div>
+            </div>
+            <Location />
           </div>
-          <Location />
-        </div>
-      </section>
-    </div>
+        </section>
+      </div>
     </div>
   );
 };

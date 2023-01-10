@@ -12,7 +12,7 @@ const HeroSection = ({ title, subtitle, buttonName, link, span }) => {
       style={{
         backgroundImage: "url(assets/img/salon.jpg)",
       }}
-      className='h-96 z-10 rounded-b-2xl overflow-hidden shadow-lg'
+      className='h-96 z-10 overflow-hidden shadow-lg'
     >
       <Hero.Overlay />
       <Hero.Content className='text-center text-white'>

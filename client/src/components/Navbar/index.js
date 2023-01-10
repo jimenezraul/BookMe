@@ -1,4 +1,4 @@
-import { useOutside } from "../../hooks/useOutside";
+import { useAutoHide } from "auto-hide-hook";
 import { Button, Navbar, Form, Toggle, Dropdown } from "react-daisyui";
 import { Link } from "react-router-dom";
 import { useAuth0 } from "@auth0/auth0-react";
@@ -44,8 +44,8 @@ const AppNavbar = () => {
     setActive(index === -1 ? 4 : index);
   }, [pathName]);
 
-  useOutside(menuRef, setIsOpen);
-  useOutside(profileRef, setIsProfileOpen);
+  useAutoHide(menuRef, setIsOpen);
+  useAutoHide(profileRef, setIsProfileOpen);
 
   const handleThemeChange = () => {
     setIsDark(!isDark);
